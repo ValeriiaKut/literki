@@ -15,8 +15,9 @@ class WelcomeScreen extends StatefulWidget {
 }
 
 class _WelcomeScreenState extends State<WelcomeScreen>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   late final AnimationController _floatCtrl;
+  late final AnimationController _intro;
   late final List<_FloatLetter> _floats;
 
   @override
@@ -26,6 +27,10 @@ class _WelcomeScreenState extends State<WelcomeScreen>
       vsync: this,
       duration: const Duration(seconds: 4),
     )..repeat(reverse: true);
+    _intro = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1600),
+    )..forward();
     final rng = math.Random();
     const sample = ['A', 'b', 'Ą', 'ć', 'D', 'e', 'Ł', 'o', 'Ś', 'ż'];
     _floats = List.generate(sample.length, (i) {
@@ -44,11 +49,34 @@ class _WelcomeScreenState extends State<WelcomeScreen>
   @override
   void dispose() {
     _floatCtrl.dispose();
+    _intro.dispose();
     super.dispose();
   }
 
   Color _hueColor(int h) =>
       [AppColors.accent, AppColors.accent2, AppColors.accent3][h];
+
+  double _progress(double start, double end, [Curve curve = Curves.easeOut]) {
+    final t = ((_intro.value - start) / (end - start)).clamp(0.0, 1.0);
+    return curve.transform(t);
+  }
+
+  Widget _slideUp({
+    required double start,
+    required double end,
+    required Widget child,
+    double translateY = 16,
+    Curve curve = Curves.easeOut,
+  }) {
+    final t = _progress(start, end, curve);
+    return Opacity(
+      opacity: t,
+      child: Transform.translate(
+        offset: Offset(0, translateY * (1 - t)),
+        child: child,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +115,8 @@ class _WelcomeScreenState extends State<WelcomeScreen>
               return LayoutBuilder(builder: (context, c) {
                 return Stack(
                   children: _floats.map((f) {
-                    final phase = math.sin((_floatCtrl.value + f.delay) * math.pi);
+                    final phase =
+                        math.sin((_floatCtrl.value + f.delay) * math.pi);
                     return Positioned(
                       left: f.x * c.maxWidth,
                       top: f.y * c.maxHeight + phase * -12,
@@ -113,47 +142,81 @@ class _WelcomeScreenState extends State<WelcomeScreen>
           SafeArea(
             child: Center(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 32),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    _Title(),
-                    const SizedBox(height: 12),
-                    const Text(
-                      'Naucz się pisać litery — to zabawa!',
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.w500,
-                        color: AppColors.inkSoft,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 32),
-                    const Mascot(size: 200, mood: MascotMood.wave),
-                    const SizedBox(height: 28),
-                    BigButton(
-                      onPressed: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (_) => const HomeScreen(),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 32, vertical: 32),
+                child: AnimatedBuilder(
+                  animation: _intro,
+                  builder: (context, _) {
+                    final mascotT = _progress(0.3, 0.85, Curves.elasticOut);
+                    return Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        _slideUp(
+                          start: 0.0,
+                          end: 0.5,
+                          translateY: 24,
+                          child: _Title(),
+                        ),
+                        const SizedBox(height: 12),
+                        _slideUp(
+                          start: 0.15,
+                          end: 0.65,
+                          child: const Text(
+                            'Naucz się pisać litery — to zabawa!',
+                            style: TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.inkSoft,
+                            ),
+                            textAlign: TextAlign.center,
                           ),
-                        );
-                      },
-                      icon: const Icon(Icons.edit, color: Colors.white),
-                      child: const Text('Zaczynamy!'),
-                    ),
-                    const SizedBox(height: 28),
-                    Wrap(
-                      spacing: 16,
-                      runSpacing: 12,
-                      alignment: WrapAlignment.center,
-                      children: const [
-                        _Chip(icon: Icons.abc, label: 'Cały alfabet'),
-                        _Chip(icon: Icons.star_rounded, label: 'Zbieraj gwiazdki'),
-                        _Chip(icon: Icons.flag_rounded, label: '3 poziomy'),
+                        ),
+                        const SizedBox(height: 32),
+                        Opacity(
+                          opacity: mascotT.clamp(0.0, 1.0),
+                          child: Transform.scale(
+                            scale: 0.5 + 0.5 * mascotT,
+                            child:
+                                const Mascot(size: 200, mood: MascotMood.wave),
+                          ),
+                        ),
+                        const SizedBox(height: 28),
+                        _slideUp(
+                          start: 0.6,
+                          end: 1.0,
+                          child: BigButton(
+                            onPressed: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (_) => const HomeScreen(),
+                                ),
+                              );
+                            },
+                            icon: const Icon(Icons.edit, color: Colors.white),
+                            child: const Text('Zaczynamy!'),
+                          ),
+                        ),
+                        const SizedBox(height: 28),
+                        _slideUp(
+                          start: 0.75,
+                          end: 1.0,
+                          child: Wrap(
+                            spacing: 16,
+                            runSpacing: 12,
+                            alignment: WrapAlignment.center,
+                            children: const [
+                              _Chip(icon: Icons.abc, label: 'Cały alfabet'),
+                              _Chip(
+                                  icon: Icons.star_rounded,
+                                  label: 'Zbieraj gwiazdki'),
+                              _Chip(
+                                  icon: Icons.flag_rounded, label: '3 poziomy'),
+                            ],
+                          ),
+                        ),
                       ],
-                    ),
-                  ],
+                    );
+                  },
                 ),
               ),
             ),
