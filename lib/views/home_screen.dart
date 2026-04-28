@@ -39,16 +39,16 @@ class HomeScreen extends StatelessWidget {
     'Ż', 'ż',
   ];
 
-  final Set<String> vowels = {
-    'A', 'a',
+  final Set<String> diacritics = {
     'Ą', 'ą',
-    'E', 'e',
+    'Ć', 'ć',
     'Ę', 'ę',
-    'I', 'i',
-    'O', 'o',
+    'Ł', 'ł',
+    'Ń', 'ń',
     'Ó', 'ó',
-    'U', 'u',
-    'Y', 'y',
+    'Ś', 'ś',
+    'Ź', 'ź',
+    'Ż', 'ż',
   };
 
   @override
@@ -103,7 +103,7 @@ class HomeScreen extends StatelessWidget {
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
 
-                color: vowels.contains(letter)
+                color: diacritics.contains(letter)
                     ? Colors.red
                     : Colors.black,
               ),

@@ -7,8 +7,9 @@ they can tap **Sprawdź** ("Check") to get a 1–5 star rating with an
 encouraging, kid-friendly message.
 
 The full Polish alphabet is supported, including diacritics:
-`Ą Ć Ę Ł Ń Ó Ś Ź Ż` (and their lowercase forms). Vowels are highlighted in red
-on the home screen.
+`Ą Ć Ę Ł Ń Ó Ś Ź Ż` (and their lowercase forms). These Polish-specific
+diacritic letters are highlighted in red on the home screen so kids can
+spot them at a glance; all other letters are black.
 
 ## Getting started
 
