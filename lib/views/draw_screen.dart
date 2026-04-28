@@ -230,7 +230,7 @@ class _DrawScreenState extends State<DrawScreen> {
                         style: TextStyle(
                           fontSize: _targetFontSize,
                           fontWeight: FontWeight.w900,
-                          color: Colors.grey.withOpacity(0.25),
+                          color: Colors.grey.withValues(alpha: 0.25),
                           letterSpacing: _targetLetterSpacing,
                         ),
                       ),
