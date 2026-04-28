@@ -73,7 +73,7 @@ class LevelSelectScreen extends StatelessWidget {
                       final letterCard = _BigLetterCard(
                         letter: letter,
                         isDia: isDia,
-                        size: wide ? null : 160,
+                        size: wide ? 280 : 160,
                       );
                       final levelList = Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -94,7 +94,7 @@ class LevelSelectScreen extends StatelessWidget {
                         return Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            AspectRatio(aspectRatio: 1, child: letterCard),
+                            letterCard,
                             const SizedBox(width: 24),
                             Expanded(child: levelList),
                           ],
