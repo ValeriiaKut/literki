@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:untitled/views/home_screen.dart';
+import 'package:untitled/views/start_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         fontFamily: 'Handwriting',
       ),
-      home: HomeScreen(),
+      home: const StartScreen(),
     );
   }
 }
