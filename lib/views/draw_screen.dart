@@ -7,12 +7,14 @@ class DrawScreen extends StatefulWidget {
   final String letter;
   final List<String> letters;
   final int index;
+  final String itemLabel;
 
   const DrawScreen({
     super.key,
     required this.letter,
     required this.letters,
     required this.index,
+    this.itemLabel = 'litera',
   });
 
   @override
@@ -37,6 +39,7 @@ class _DrawScreenState extends State<DrawScreen> {
           letter: widget.letters[newIndex],
           letters: widget.letters,
           index: newIndex,
+          itemLabel: widget.itemLabel,
         ),
       ),
     );
@@ -202,7 +205,7 @@ class _DrawScreenState extends State<DrawScreen> {
                 Navigator.pop(ctx);
                 goToLetter(widget.index + 1);
               },
-              child: const Text("Następna litera", style: TextStyle(fontSize: 16)),
+              child: Text("Następna ${widget.itemLabel}", style: const TextStyle(fontSize: 16)),
             ),
         ],
       ),
@@ -213,7 +216,7 @@ class _DrawScreenState extends State<DrawScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Litera ${widget.letter}'),
+        title: Text('${widget.itemLabel[0].toUpperCase()}${widget.itemLabel.substring(1)} ${widget.letter}'),
       ),
 
       body: Column(

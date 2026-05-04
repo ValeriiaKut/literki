@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'home_screen.dart';
+import 'numbers_screen.dart';
 
 class StartScreen extends StatelessWidget {
   const StartScreen({super.key});
@@ -46,7 +47,10 @@ class StartScreen extends StatelessWidget {
                   label: 'Cyfry',
                   emoji: '🔢',
                   color: const Color(0xFF81C784),
-                  onTap: () {},
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => NumbersScreen()),
+                  ),
                 ),
               ],
             ),
