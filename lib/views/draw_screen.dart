@@ -2,6 +2,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'painter.dart';
+import '../services/data_logger.dart';
 
 class DrawScreen extends StatefulWidget {
   final String letter;
@@ -30,6 +31,14 @@ class _DrawScreenState extends State<DrawScreen> {
 
   List<Offset?> points = [];
   Size? _canvasSize;
+  int _attemptCount = 0;
+  late DateTime _startTime;
+
+  @override
+  void initState() {
+    super.initState();
+    _startTime = DateTime.now();
+  }
 
   void goToLetter(int newIndex) {
     Navigator.pushReplacement(
@@ -55,7 +64,17 @@ class _DrawScreenState extends State<DrawScreen> {
       return;
     }
 
+    _attemptCount++;
     final score = await _scoreDrawing(size);
+    final elapsed = DateTime.now().difference(_startTime).inSeconds;
+    final modul = widget.itemLabel == 'cyfra' ? 'cyfry' : 'litery';
+    DataLogger.logAttempt(
+      modul: modul,
+      element: widget.letter,
+      numerProby: _attemptCount,
+      czasSekundy: elapsed,
+      wynik: score,
+    );
     _showResultDialog(score, _messageForScore(score));
   }
 

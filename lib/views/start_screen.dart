@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'home_screen.dart';
 import 'numbers_screen.dart';
+import 'report_screen.dart';
 
 class StartScreen extends StatelessWidget {
   const StartScreen({super.key});
@@ -11,14 +12,20 @@ class StartScreen extends StatelessWidget {
       backgroundColor: const Color(0xFFFFF8E1),
       body: SafeArea(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text(
-              'Literki',
-              style: TextStyle(
-                fontSize: 64,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF5C3D11),
+            const Spacer(),
+            GestureDetector(
+              onLongPress: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const ReportScreen()),
+              ),
+              child: const Text(
+                'Literki',
+                style: TextStyle(
+                  fontSize: 64,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF5C3D11),
+                ),
               ),
             ),
             const SizedBox(height: 8),
@@ -53,6 +60,14 @@ class StartScreen extends StatelessWidget {
                   ),
                 ),
               ],
+            ),
+            const Spacer(),
+            const Padding(
+              padding: EdgeInsets.only(bottom: 12),
+              child: Text(
+                'Dla nauczyciela: przytrzymaj tytuł „Literki", aby otworzyć raport',
+                style: TextStyle(fontSize: 11, color: Color(0xFFBCAAA4)),
+              ),
             ),
           ],
         ),
