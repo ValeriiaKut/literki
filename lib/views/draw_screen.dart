@@ -4,6 +4,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 
 import '../data/alphabet.dart';
+import '../data/letter_traces.dart';
 import '../state/progress_store.dart';
 import '../theme.dart';
 import '../widgets/big_button.dart';
@@ -11,6 +12,7 @@ import '../widgets/mascot.dart';
 import '../widgets/paper_background.dart';
 import 'painter.dart';
 import 'success_dialog.dart';
+import 'trace_guide_painter.dart';
 
 class DrawScreen extends StatefulWidget {
   final String letter;
@@ -331,10 +333,24 @@ class _DrawScreenState extends State<DrawScreen>
             if (_demoActive) _demoOverlay(),
             GestureDetector(
               behavior: HitTestBehavior.opaque,
-              onPanStart: (d) =>
-                  setState(() => points.add(d.localPosition)),
-              onPanUpdate: (d) =>
-                  setState(() => points.add(d.localPosition)),
+              onPanStart: (d) {
+                final size = _canvasSize;
+                if (size != null) {
+                  final dx = d.localPosition.dx / size.width;
+                  final dy = d.localPosition.dy / size.height;
+                  debugPrint('Offset(${dx.toStringAsFixed(2)}, ${dy.toStringAsFixed(2)}),');
+                }
+                setState(() => points.add(d.localPosition));
+              },
+              onPanUpdate: (d) {
+                final size = _canvasSize;
+                if (size != null) {
+                  final dx = d.localPosition.dx / size.width;
+                  final dy = d.localPosition.dy / size.height;
+                  debugPrint('Offset(${dx.toStringAsFixed(2)}, ${dy.toStringAsFixed(2)}),');
+                }
+                setState(() => points.add(d.localPosition));
+              },
               onPanEnd: (_) => points.add(null),
               child: CustomPaint(
                 painter: DrawingPainter(
@@ -377,6 +393,8 @@ class _DrawScreenState extends State<DrawScreen>
   }
 
   Widget _guideForLevel() {
+    final trace = letterTraces[widget.letter];
+
     if (widget.level == 1) {
       return Center(
         child: Text(
@@ -394,26 +412,32 @@ class _DrawScreenState extends State<DrawScreen>
         ),
       );
     }
+
     if (widget.level == 2) {
-      return Center(
-        child: Text(
-          widget.letter,
-          style: TextStyle(
-            fontFamily: 'Handwriting',
-            fontSize: _targetFontSize,
-            fontWeight: FontWeight.w800,
-            height: 1,
-            letterSpacing: _targetLetterSpacing,
-            foreground: Paint()
-              ..style = PaintingStyle.stroke
-              ..strokeWidth = 3
-              ..strokeJoin = StrokeJoin.round
-              ..color = (_isDia ? AppColors.diacritic : AppColors.inkSoft)
-                  .withValues(alpha: 0.55),
+      return Stack(
+        children: [
+          Center(
+            child: Text(
+              widget.letter,
+              style: TextStyle(
+                fontFamily: 'Handwriting',
+                fontSize: _targetFontSize,
+                fontWeight: FontWeight.w800,
+                height: 1,
+                letterSpacing: _targetLetterSpacing,
+                color: AppColors.inkSoft.withValues(alpha: 0.18),
+              ),
+            ),
           ),
-        ),
+          if (trace != null)
+            CustomPaint(
+              painter: TraceGuidePainter(trace),
+              size: Size.infinite,
+            ),
+        ],
       );
     }
+
     return Center(
       child: Container(
         width: 10,
