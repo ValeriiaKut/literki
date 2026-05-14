@@ -1,14 +1,28 @@
 import 'package:flutter/material.dart';
 
 import '../data/alphabet.dart';
+import '../data/module.dart';
 import '../state/progress_store.dart';
 import '../theme.dart';
 import '../widgets/paper_background.dart';
 import '../widgets/star.dart';
 import 'level_select_screen.dart';
+import 'report_screen.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  Module _module = Module.letters;
+
+  void _setModule(Module m) {
+    if (m == _module) return;
+    setState(() => _module = m);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,14 +36,19 @@ class HomeScreen extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
               child: Column(
                 children: [
-                  _TopBar(),
-                  const SizedBox(height: 8),
-                  const _Legend(),
-                  const SizedBox(height: 12),
+                  _TopBar(module: _module),
+                  const SizedBox(height: 10),
+                  _ModuleSwitch(
+                    selected: _module,
+                    onSelect: _setModule,
+                  ),
+                  const SizedBox(height: 10),
+                  if (_module == Module.letters) const _Legend(),
+                  if (_module == Module.letters) const SizedBox(height: 12),
                   Expanded(
                     child: ListenableBuilder(
                       listenable: ProgressStore.instance,
-                      builder: (context, _) => const _Grid(),
+                      builder: (context, _) => _Grid(module: _module),
                     ),
                   ),
                 ],
@@ -43,6 +62,9 @@ class HomeScreen extends StatelessWidget {
 }
 
 class _TopBar extends StatelessWidget {
+  final Module module;
+  const _TopBar({required this.module});
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -51,11 +73,11 @@ class _TopBar extends StatelessWidget {
           icon: Icons.arrow_back,
           onTap: () => Navigator.of(context).maybePop(),
         ),
-        const Expanded(
+        Expanded(
           child: Center(
             child: Text(
-              'Wybierz literę',
-              style: TextStyle(
+              'Wybierz ${module.accusativeSingular}',
+              style: const TextStyle(
                 fontFamily: 'Handwriting',
                 fontWeight: FontWeight.w700,
                 fontSize: 36,
@@ -68,32 +90,120 @@ class _TopBar extends StatelessWidget {
         ListenableBuilder(
           listenable: ProgressStore.instance,
           builder: (context, _) {
-            return Container(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-              decoration: BoxDecoration(
-                color: AppColors.cardBg,
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: cardShadow,
+            return GestureDetector(
+              onLongPress: () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const ReportScreen()),
               ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const StarIcon(filled: true, size: 22),
-                  const SizedBox(width: 8),
-                  Text(
-                    '${ProgressStore.instance.totalStars}',
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 18,
-                      color: AppColors.ink,
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                decoration: BoxDecoration(
+                  color: AppColors.cardBg,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: cardShadow,
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const StarIcon(filled: true, size: 22),
+                    const SizedBox(width: 8),
+                    Text(
+                      '${ProgressStore.instance.totalStars}',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 18,
+                        color: AppColors.ink,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             );
           },
         ),
       ],
+    );
+  }
+}
+
+class _ModuleSwitch extends StatelessWidget {
+  final Module selected;
+  final ValueChanged<Module> onSelect;
+
+  const _ModuleSwitch({required this.selected, required this.onSelect});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        color: AppColors.cardBg,
+        borderRadius: BorderRadius.circular(18),
+        boxShadow: cardShadow,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          for (final m in Module.values)
+            _ModuleChip(
+              label: m.titleLabel,
+              icon: m == Module.letters ? Icons.abc : Icons.pin,
+              active: selected == m,
+              onTap: () => onSelect(m),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ModuleChip extends StatelessWidget {
+  final String label;
+  final IconData icon;
+  final bool active;
+  final VoidCallback onTap;
+
+  const _ModuleChip({
+    required this.label,
+    required this.icon,
+    required this.active,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final color = active ? AppColors.accent : AppColors.cardBg;
+    final fg = active ? Colors.white : AppColors.inkSoft;
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(14),
+        onTap: onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 160),
+          curve: Curves.easeOut,
+          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+          decoration: BoxDecoration(
+            color: color,
+            borderRadius: BorderRadius.circular(14),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, size: 20, color: fg),
+              const SizedBox(width: 8),
+              Text(
+                label,
+                style: TextStyle(
+                  color: fg,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 16,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
@@ -144,16 +254,19 @@ class _Legend extends StatelessWidget {
 }
 
 class _Grid extends StatelessWidget {
-  const _Grid();
+  final Module module;
+  const _Grid({required this.module});
 
   @override
   Widget build(BuildContext context) {
+    final items = module.items;
     return LayoutBuilder(
       builder: (context, constraints) {
         // Aim for tiles around 70px on phones, larger on tablets.
         final target = constraints.maxWidth >= 700 ? 90.0 : 64.0;
         final cols = (constraints.maxWidth / target).floor().clamp(4, 16);
         return GridView.builder(
+          key: ValueKey(module),
           padding: EdgeInsets.zero,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: cols,
@@ -161,10 +274,11 @@ class _Grid extends StatelessWidget {
             mainAxisSpacing: 8,
             childAspectRatio: 1,
           ),
-          itemCount: polishAlphabet.length,
+          itemCount: items.length,
           itemBuilder: (context, idx) {
             return _LetterTile(
-              letter: polishAlphabet[idx],
+              letter: items[idx],
+              module: module,
               delay: Duration(milliseconds: idx * 10),
             );
           },
@@ -176,8 +290,13 @@ class _Grid extends StatelessWidget {
 
 class _LetterTile extends StatefulWidget {
   final String letter;
+  final Module module;
   final Duration delay;
-  const _LetterTile({required this.letter, required this.delay});
+  const _LetterTile({
+    required this.letter,
+    required this.module,
+    required this.delay,
+  });
 
   @override
   State<_LetterTile> createState() => _LetterTileState();
@@ -207,8 +326,10 @@ class _LetterTileState extends State<_LetterTile>
 
   @override
   Widget build(BuildContext context) {
-    final isDia = polishDiacritics.contains(widget.letter);
-    final stars = ProgressStore.instance.bestStarsFor(widget.letter);
+    final isDia = widget.module == Module.letters &&
+        polishDiacritics.contains(widget.letter);
+    final stars = ProgressStore.instance
+        .bestStarsFor(widget.letter, module: widget.module);
     return AnimatedBuilder(
       animation: _enter,
       builder: (_, child) {
@@ -229,7 +350,10 @@ class _LetterTileState extends State<_LetterTile>
           borderRadius: BorderRadius.circular(14),
           onTap: () {
             Navigator.of(context).push(MaterialPageRoute(
-              builder: (_) => LevelSelectScreen(letter: widget.letter),
+              builder: (_) => LevelSelectScreen(
+                letter: widget.letter,
+                module: widget.module,
+              ),
             ));
           },
           child: Ink(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../data/alphabet.dart';
+import '../data/module.dart';
 import '../state/progress_store.dart';
 import '../theme.dart';
 import '../widgets/paper_background.dart';
@@ -9,27 +10,36 @@ import 'draw_screen.dart';
 
 class LevelSelectScreen extends StatelessWidget {
   final String letter;
-  const LevelSelectScreen({super.key, required this.letter});
+  final Module module;
+  const LevelSelectScreen({
+    super.key,
+    required this.letter,
+    this.module = Module.letters,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final isDia = polishDiacritics.contains(letter);
-    final levels = const [
+    final isDia =
+        module == Module.letters && polishDiacritics.contains(letter);
+    final easyDesc = module == Module.letters
+        ? 'Cała litera widoczna — pisz po szarej linii'
+        : 'Cała cyfra widoczna — pisz po szarej linii';
+    final levels = [
       _LevelInfo(
         n: 1,
         name: 'Łatwy',
-        desc: 'Cała litera widoczna — pisz po szarej linii',
+        desc: easyDesc,
         emoji: '🐣',
         color: AppColors.accent2,
       ),
-      _LevelInfo(
+      const _LevelInfo(
         n: 2,
         name: 'Średni',
         desc: 'Tylko obrys — pisz wewnątrz linii',
         emoji: '🐰',
         color: AppColors.accent,
       ),
-      _LevelInfo(
+      const _LevelInfo(
         n: 3,
         name: 'Trudny',
         desc: 'Sam(a)! Spróbuj bez pomocy',
@@ -56,9 +66,9 @@ class LevelSelectScreen extends StatelessWidget {
                         onTap: () => Navigator.of(context).maybePop(),
                       ),
                       const SizedBox(width: 14),
-                      const Text(
-                        'Wybierz poziom dla litery',
-                        style: TextStyle(
+                      Text(
+                        'Wybierz poziom dla ${module.genitiveSingular}',
+                        style: const TextStyle(
                           fontSize: 22,
                           color: AppColors.inkSoft,
                           fontWeight: FontWeight.w500,
@@ -82,6 +92,7 @@ class LevelSelectScreen extends StatelessWidget {
                           for (int i = 0; i < levels.length; i++) ...[
                             _LevelCard(
                               letter: letter,
+                              module: module,
                               info: levels[i],
                               delay: Duration(milliseconds: i * 100),
                             ),
@@ -179,10 +190,12 @@ class _LevelInfo {
 
 class _LevelCard extends StatefulWidget {
   final String letter;
+  final Module module;
   final _LevelInfo info;
   final Duration delay;
   const _LevelCard({
     required this.letter,
+    required this.module,
     required this.info,
     required this.delay,
   });
@@ -230,8 +243,9 @@ class _LevelCardState extends State<_LevelCard>
       child: ListenableBuilder(
         listenable: ProgressStore.instance,
         builder: (context, _) {
-          final stars = ProgressStore.instance
-              .starsFor(widget.letter, widget.info.n);
+          final stars = ProgressStore.instance.starsFor(
+              widget.letter, widget.info.n,
+              module: widget.module);
           return Material(
             color: AppColors.cardBg,
             borderRadius: BorderRadius.circular(22),
@@ -242,6 +256,7 @@ class _LevelCardState extends State<_LevelCard>
                   builder: (_) => DrawScreen(
                     letter: widget.letter,
                     level: widget.info.n,
+                    module: widget.module,
                   ),
                 ));
               },

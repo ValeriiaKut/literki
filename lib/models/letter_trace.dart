@@ -4,14 +4,14 @@ class LetterTrace {
   final String letter;
   final List<List<Offset>> strokes;
 
-  // нове поле для стрілок
+
   final List<TraceArrow> arrows;
 
   const LetterTrace({
     required this.letter,
     required this.strokes,
 
-    // якщо стрілок нема → пустий список
+
     this.arrows = const [],
   });
 }

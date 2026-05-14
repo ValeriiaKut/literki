@@ -3615,4 +3615,415 @@ const Map<String, LetterTrace> letterTraces = {
       ),
     ],
   ),
+  '0': LetterTrace(
+    letter: '0',
+    strokes: [
+      [
+        Offset(0.50, 0.16),
+
+        Offset(0.57, 0.23),
+        Offset(0.60, 0.35),
+        Offset(0.61, 0.47),
+        Offset(0.60, 0.62),
+        Offset(0.58, 0.73),
+        Offset(0.51, 0.80),
+        Offset(0.43, 0.73),
+        Offset(0.40, 0.62),
+        Offset(0.39, 0.47),
+        Offset(0.40, 0.35),
+        Offset(0.44, 0.23),
+        Offset(0.50, 0.16),
+      ],
+    ],
+    arrows: [
+      TraceArrow(
+        strokeIndex: 0,
+        fromIndex: 0,
+        toIndex: 1,
+      ),
+      TraceArrow(
+        strokeIndex: 0,
+        fromIndex: 5,
+        toIndex: 6,
+      ),
+      TraceArrow(
+        strokeIndex: 0,
+        fromIndex: 9,
+        toIndex: 10,
+      ),
+    ],
+  ),
+  '1': LetterTrace(
+    letter: '1',
+    strokes: [
+      [
+        Offset(0.43, 0.28),
+        Offset(0.46, 0.24),
+        Offset(0.50, 0.17),
+        Offset(0.50, 0.27),
+        Offset(0.50, 0.37),
+        Offset(0.50, 0.47),
+        Offset(0.50, 0.57),
+        Offset(0.50, 0.67),
+        Offset(0.50, 0.77),
+      ],
+    ],
+    arrows: [
+      TraceArrow(
+        strokeIndex: 0,
+        fromIndex: 0,
+        toIndex: 2,
+      ),
+      TraceArrow(
+        strokeIndex: 0,
+        fromIndex: 3,
+        toIndex: 7,
+      ),
+    ],
+  ),
+  '2': LetterTrace(
+    letter: '2',
+    strokes: [
+      [
+        Offset(0.42, 0.23),
+        Offset(0.47, 0.17),
+        Offset(0.53, 0.17),
+        Offset(0.58, 0.24),
+        Offset(0.58, 0.34),
+        Offset(0.56, 0.46),
+        Offset(0.51, 0.57),
+        Offset(0.46, 0.68),
+        Offset(0.40, 0.79),
+
+        // dolna linia
+        Offset(0.46, 0.79),
+        Offset(0.53, 0.79),
+        Offset(0.60, 0.79),
+      ],
+    ],
+    arrows: [
+      TraceArrow(
+        strokeIndex: 0,
+        fromIndex: 0,
+        toIndex: 1,
+      ),
+      TraceArrow(
+        strokeIndex: 0,
+        fromIndex: 5,
+        toIndex: 8,
+      ),
+      TraceArrow(
+        strokeIndex: 0,
+        fromIndex: 9,
+        toIndex: 11,
+      ),
+    ],
+  ),
+  '3': LetterTrace(
+    letter: '3',
+    strokes: [
+      [
+        Offset(0.41, 0.23),
+        Offset(0.46, 0.18),
+        Offset(0.52, 0.17),
+        Offset(0.57, 0.24),
+        Offset(0.58, 0.34),
+        Offset(0.55, 0.42),
+        Offset(0.48, 0.46),
+
+        Offset(0.55, 0.50),
+        Offset(0.59, 0.60),
+        Offset(0.58, 0.70),
+        Offset(0.54, 0.77),
+        Offset(0.49, 0.80),
+        Offset(0.44, 0.77),
+        Offset(0.39, 0.70),
+      ],
+    ],
+    arrows: [
+      TraceArrow(
+        strokeIndex: 0,
+        fromIndex: 0,
+        toIndex: 2,
+      ),
+      TraceArrow(
+        strokeIndex: 0,
+        fromIndex: 6,
+        toIndex: 7,
+      ),
+      TraceArrow(
+        strokeIndex: 0,
+        fromIndex: 11,
+        toIndex: 13,
+      ),
+    ],
+  ),
+  '4': LetterTrace(
+    letter: '4',
+    strokes: [
+      [
+        Offset(0.50, 0.17),
+        Offset(0.48, 0.27),
+        Offset(0.46, 0.36),
+        Offset(0.44, 0.45),
+        Offset(0.41, 0.54),
+        Offset(0.39, 0.61),
+        Offset(0.46, 0.61),
+        Offset(0.53, 0.61),
+        Offset(0.60, 0.61),
+      ],
+      [
+        Offset(0.56, 0.38),
+        Offset(0.56, 0.47),
+        Offset(0.56, 0.56),
+        Offset(0.56, 0.66),
+        Offset(0.56, 0.76),
+      ],
+    ],
+    arrows: [
+      TraceArrow(
+        strokeIndex: 0,
+        fromIndex: 0,
+        toIndex: 3,
+      ),
+      TraceArrow(
+        strokeIndex: 0,
+        fromIndex: 5,
+        toIndex: 8,
+      ),
+      TraceArrow(
+        strokeIndex: 1,
+        fromIndex: 0,
+        toIndex: 4,
+      ),
+    ],
+  ),
+  '5': LetterTrace(
+    letter: '5',
+    strokes: [
+      [
+        // górna linia
+        Offset(0.58, 0.18),
+        Offset(0.53, 0.18),
+        Offset(0.48, 0.18),
+        Offset(0.43, 0.18),
+
+        // lewa strona w dół
+        Offset(0.43, 0.26),
+        Offset(0.43, 0.34),
+        Offset(0.43, 0.42),
+
+        // środek
+        Offset(0.43, 0.48),
+        Offset(0.47, 0.42),
+        Offset(0.52, 0.42),
+        Offset(0.57, 0.47),
+
+        // dół
+        Offset(0.59, 0.56),
+        Offset(0.59, 0.67),
+        Offset(0.57, 0.76),
+        Offset(0.52, 0.79),
+        Offset(0.47, 0.79),
+        Offset(0.43, 0.74),
+        Offset(0.40, 0.71),
+      ],
+    ],
+    arrows: [
+      TraceArrow(
+        strokeIndex: 0,
+        fromIndex: 0,
+        toIndex: 2,
+      ),
+      TraceArrow(
+        strokeIndex: 0,
+        fromIndex: 3,
+        toIndex: 7,
+      ),
+      TraceArrow(
+        strokeIndex: 0,
+        fromIndex: 9,
+        toIndex: 10,
+      ),
+      TraceArrow(
+        strokeIndex: 0,
+        fromIndex: 15,
+        toIndex: 17,
+      ),
+    ],
+  ),
+  '6': LetterTrace(
+    letter: '6',
+    strokes: [
+      [
+        Offset(0.56, 0.16),
+        Offset(0.50, 0.20),
+        Offset(0.46, 0.25),
+        Offset(0.42, 0.36),
+        Offset(0.41, 0.49),
+        Offset(0.41, 0.63),
+        Offset(0.44, 0.75),
+        Offset(0.50, 0.80),
+        Offset(0.57, 0.76),
+        Offset(0.60, 0.66),
+        Offset(0.60, 0.54),
+        Offset(0.55, 0.44),
+        Offset(0.50, 0.43),
+        Offset(0.46, 0.45),
+        Offset(0.43, 0.50),
+      ],
+    ],
+    arrows: [
+      TraceArrow(
+        strokeIndex: 0,
+        fromIndex: 0,
+        toIndex: 2,
+      ),
+      TraceArrow(
+        strokeIndex: 0,
+        fromIndex: 7,
+        toIndex: 8,
+      ),
+      TraceArrow(
+        strokeIndex: 0,
+        fromIndex: 12,
+        toIndex: 14,
+      ),
+    ],
+  ),
+  '7': LetterTrace(
+    letter: '7',
+    strokes: [
+      [
+        // górna linia
+        Offset(0.41, 0.17),
+        Offset(0.47, 0.17),
+        Offset(0.53, 0.17),
+        Offset(0.58, 0.17),
+
+        // linia w dół
+        Offset(0.56, 0.30),
+        Offset(0.54, 0.40),
+        Offset(0.52, 0.50),
+        Offset(0.50, 0.60),
+        Offset(0.48, 0.70),
+        Offset(0.46, 0.80),
+      ],
+    ],
+    arrows: [
+      TraceArrow(
+        strokeIndex: 0,
+        fromIndex: 0,
+        toIndex: 1,
+      ),
+      TraceArrow(
+        strokeIndex: 0,
+        fromIndex: 3,
+        toIndex: 5,
+      ),
+    ],
+  ),
+  '8': LetterTrace(
+    letter: '8',
+    strokes: [
+      [
+        // środek
+        Offset(0.50, 0.45),
+
+        // górne koło
+        Offset(0.56, 0.40),
+        Offset(0.58, 0.30),
+        Offset(0.56, 0.19),
+        Offset(0.50, 0.15),
+        Offset(0.44, 0.19),
+        Offset(0.42, 0.30),
+        Offset(0.45, 0.40),
+
+        // przejście
+        Offset(0.56, 0.51),
+
+        // dolne koło
+        Offset(0.60, 0.62),
+        Offset(0.57, 0.76),
+        Offset(0.50, 0.79),
+        Offset(0.44, 0.76),
+        Offset(0.40, 0.66),
+        Offset(0.42, 0.54),
+        Offset(0.50, 0.45),
+      ],
+    ],
+    arrows: [
+      // górna część
+      TraceArrow(
+        strokeIndex: 0,
+        fromIndex: 0,
+        toIndex: 1,
+      ),
+
+
+
+      // przejście do dołu
+      TraceArrow(
+        strokeIndex: 0,
+        fromIndex: 7,
+        toIndex: 8,
+      ),
+
+
+
+
+      TraceArrow(
+        strokeIndex: 0,
+        fromIndex: 13,
+        toIndex: 14,
+      ),
+    ],
+  ),
+  '9': LetterTrace(
+    letter: '9',
+    strokes: [
+      [
+        // górne koło
+        Offset(0.59, 0.34),
+        Offset(0.57, 0.23),
+        Offset(0.52, 0.17),
+        Offset(0.45, 0.18),
+        Offset(0.40, 0.30),
+        Offset(0.40, 0.42),
+        Offset(0.44, 0.53),
+        Offset(0.50, 0.54),
+        Offset(0.54, 0.51),
+        Offset(0.59, 0.44),
+
+        // dół
+        Offset(0.59, 0.54),
+        Offset(0.57, 0.64),
+        Offset(0.54, 0.72),
+        Offset(0.49, 0.78),
+        Offset(0.44, 0.80),
+      ],
+    ],
+    arrows: [
+      // górne koło
+      TraceArrow(
+        strokeIndex: 0,
+        fromIndex: 0,
+        toIndex: 1,
+      ),
+
+      // przejście
+      TraceArrow(
+        strokeIndex: 0,
+        fromIndex: 4,
+        toIndex: 5,
+      ),
+
+      // dół
+      TraceArrow(
+        strokeIndex: 0,
+        fromIndex: 9,
+        toIndex: 10,
+      ),
+    ],
+  ),
 };

@@ -1,15 +1,20 @@
 import 'package:flutter/foundation.dart';
 
+import '../data/module.dart';
+
 class ProgressStore extends ChangeNotifier {
   static final ProgressStore instance = ProgressStore._();
   ProgressStore._();
 
   final Map<String, Map<int, int>> _stars = {};
 
-  int starsFor(String letter, int level) => _stars[letter]?[level] ?? 0;
+  String _key(Module module, String item) => '${module.id}:$item';
 
-  int bestStarsFor(String letter) {
-    final m = _stars[letter];
+  int starsFor(String item, int level, {Module module = Module.letters}) =>
+      _stars[_key(module, item)]?[level] ?? 0;
+
+  int bestStarsFor(String item, {Module module = Module.letters}) {
+    final m = _stars[_key(module, item)];
     if (m == null) return 0;
     return m.values.fold(0, (max, v) => v > max ? v : max);
   }
@@ -24,10 +29,12 @@ class ProgressStore extends ChangeNotifier {
     return t;
   }
 
-  void record(String letter, int level, int score) {
-    final cur = _stars[letter]?[level] ?? 0;
+  void record(String item, int level, int score,
+      {Module module = Module.letters}) {
+    final key = _key(module, item);
+    final cur = _stars[key]?[level] ?? 0;
     if (score <= cur) return;
-    _stars.putIfAbsent(letter, () => {})[level] = score;
+    _stars.putIfAbsent(key, () => {})[level] = score;
     notifyListeners();
   }
 
