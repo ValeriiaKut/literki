@@ -3,8 +3,10 @@
 A Flutter app that helps Polish-speaking kids learn how to write **letters and
 digits** by tracing them on screen. Children pick an item from the alphabet
 or the numbers grid, choose a difficulty level, and draw on top of a guide.
-When they tap **Sprawdź** ("Check") they get a 1–5 star rating with a mascot
-reaction and an encouraging Polish message.
+Tapping a letter on the grid plays its Polish pronunciation so kids learn
+the sound at the same time as the shape. When they tap **Sprawdź**
+("Check") they get a 1–5 star rating with a mascot reaction and an
+encouraging Polish message.
 
 The full Polish alphabet is supported, including diacritics:
 `Ą Ć Ę Ł Ń Ó Ś Ź Ż` (and their lowercase forms). These Polish-specific
@@ -89,6 +91,24 @@ The app has six screens:
    per-element breakdown sorted by average score (weakest first), each
    with attempt count, average time, and average stars. A "Wyczyść" button
    wipes the underlying CSV log after a confirmation dialog.
+
+## Letter sounds
+
+Each Polish letter has a recorded pronunciation under
+`assets/literki_dzwieki/` (e.g. `Ą.wav`, `Ł.wav`, `Ż.wav` — uppercase WAV
+per letter; lowercase taps reuse the same file via `toUpperCase()`).
+Tapping a letter tile on the home grid plays the corresponding WAV via
+[`audioplayers`](https://pub.dev/packages/audioplayers), routed through
+the `LetterSound` singleton in `lib/state/letter_sound.dart`. Calls are
+fire-and-forget — playback errors are swallowed so a missing recording
+never blocks navigation. Digits do not have recordings yet, so the
+**Cyfry** module is silent on tap.
+
+Filenames must be in Unicode **NFC** (precomposed) form: `Ą` = `U+0104`,
+not `A` + combining ogonek. macOS sometimes returns NFD when listing
+filenames; if you add new recordings on a Mac, double-check with
+`ls literki_dzwieki | xxd` (the diacritic should be a single 2-byte UTF-8
+sequence) before committing, otherwise the asset bundle won't resolve them.
 
 ## Progress and logging
 
@@ -200,6 +220,7 @@ lib/
     module.dart                    # Module enum (letters | numbers) + labels
   state/
     progress_store.dart            # In-memory stars per (module, item, level)
+    letter_sound.dart              # AudioPlayer singleton for letter pronunciations
   services/
     data_logger.dart               # CSV attempt log in app documents dir
   widgets/
@@ -217,6 +238,7 @@ lib/
     painter.dart                   # CustomPainter for live user strokes
 assets/
   fonts/                           # PlaywritePL handwriting font
+  literki_dzwieki/                 # Per-letter Polish pronunciation WAVs (A.wav, Ą.wav, …)
   literki-icon-1024.png            # Source for flutter_launcher_icons
   literki-splash-1080x1920.png     # Source for flutter_native_splash
 ```

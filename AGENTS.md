@@ -41,6 +41,8 @@ Target audience implications you should keep front of mind:
 
 Key dependencies (`pubspec.yaml`):
 - `path_provider` — runtime, used by `DataLogger` for the CSV path.
+- `audioplayers` — runtime, used by `LetterSound` to play per-letter
+  Polish pronunciations from `assets/literki_dzwieki/`.
 - `flutter_launcher_icons`, `flutter_native_splash` — dev-time codegen.
 
 ## Build, run, test
@@ -76,6 +78,7 @@ lib/
     module.dart                # Module enum (letters | numbers) + Polish labels
   state/
     progress_store.dart        # Singleton in-memory stars, keyed by (module,item,level)
+    letter_sound.dart          # Singleton AudioPlayer wrapper for letter pronunciations
   services/
     data_logger.dart           # CSV append/read/clear at app docs dir
   widgets/
@@ -127,6 +130,23 @@ contract.
   (e.g. syllables), switch to a proper CSV escape.
 - Treat the file as best-effort: `DataLogger` swallows errors and just
   `debugPrint`s. Don't surface those failures to kids.
+
+### Letter sounds
+- Use `LetterSound.instance.play(letter)` (singleton, fire-and-forget) —
+  don't instantiate `AudioPlayer` ad-hoc. The singleton stops any
+  in-flight playback so rapid taps cut off cleanly.
+- Recordings live in `assets/literki_dzwieki/` as **uppercase WAVs only**
+  (`A.wav`…`Ż.wav`); lowercase letters reuse the file via `toUpperCase()`.
+- Filenames must be Unicode **NFC** (e.g. `Ą` = `U+0104`, single
+  codepoint). macOS may hand back NFD when listing dirs — verify with
+  `ls assets/literki_dzwieki | xxd` after adding files, otherwise the
+  asset bundle won't resolve them at runtime.
+- Playback errors are silently swallowed — sound is a nice-to-have, not
+  a blocker. Don't wire it into navigation flow control.
+- Only **letters** have sounds today. Digits (`Module.numbers`) are
+  silent. If you add digit recordings, drop them in the same folder and
+  the existing tile tap will pick them up (the home grid calls
+  `LetterSound` for both modules).
 
 ### Layout gating
 `c.maxWidth >= 700` is the agreed phone/tablet breakpoint. If you add a
