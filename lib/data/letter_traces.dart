@@ -88,57 +88,57 @@ const Map<String, LetterTrace> letterTraces = {
   'a': LetterTrace(
     letter: 'a',
     strokes: [
-      // Okrągła część litery „a”
+      // okrągła część litery „a”
       [
-        Offset(0.55, 0.52),
-        Offset(0.53, 0.50),
-        Offset(0.50, 0.50),
-        Offset(0.47, 0.50),
-        Offset(0.45, 0.52),
-        Offset(0.44, 0.55),
-        Offset(0.43, 0.59),
-        Offset(0.43, 0.64),
-        Offset(0.43, 0.69),
-        Offset(0.44, 0.73),
-        Offset(0.46, 0.77),
-        Offset(0.50, 0.78),
-        Offset(0.53, 0.75),
-        Offset(0.55, 0.69),
-        Offset(0.55, 0.62),
-        Offset(0.56, 0.55),
-        Offset(0.56, 0.48),
+        Offset(0.55, 0.36),
+        Offset(0.53, 0.34),
+        Offset(0.50, 0.34),
+        Offset(0.47, 0.34),
+        Offset(0.45, 0.36),
+        Offset(0.44, 0.39),
+        Offset(0.43, 0.43),
+        Offset(0.43, 0.48),
+        Offset(0.43, 0.53),
+        Offset(0.44, 0.57),
+        Offset(0.46, 0.61),
+        Offset(0.50, 0.62),
+        Offset(0.53, 0.59),
+        Offset(0.55, 0.53),
+        Offset(0.55, 0.46),
+        Offset(0.56, 0.39),
+        Offset(0.56, 0.32),
       ],
 
-      // Pionowa kreska po prawej stronie
+      // prawa pionowa kreska
       [
-        Offset(0.56, 0.48),
-        Offset(0.56, 0.53),
-        Offset(0.56, 0.58),
-        Offset(0.56, 0.63),
-        Offset(0.55, 0.68),
-        Offset(0.55, 0.72),
-        Offset(0.56, 0.76),
-        Offset(0.58, 0.79),
-        Offset(0.60, 0.77),
+        Offset(0.56, 0.32),
+        Offset(0.56, 0.37),
+        Offset(0.56, 0.42),
+        Offset(0.56, 0.47),
+        Offset(0.55, 0.52),
+        Offset(0.55, 0.56),
+        Offset(0.56, 0.60),
+        Offset(0.58, 0.63),
+        Offset(0.60, 0.61),
       ],
     ],
 
     arrows: [
-      // верхня частина кола
+      // górna część koła
       TraceArrow(
         strokeIndex: 0,
         fromIndex: 0,
         toIndex: 4,
       ),
 
-      // нижня частина кола
+      // dolna część koła
       TraceArrow(
         strokeIndex: 0,
         fromIndex: 7,
         toIndex: 10,
       ),
 
-      // права палочка вниз
+      // prawa kreska w dół
       TraceArrow(
         strokeIndex: 1,
         fromIndex: 1,
@@ -150,60 +150,65 @@ const Map<String, LetterTrace> letterTraces = {
     letter: 'Ą',
     strokes: [
       [
-        Offset(0.32, 0.79),
-        Offset(0.36, 0.79),
-        Offset(0.38, 0.77),
-        Offset(0.40, 0.73),
-        Offset(0.42, 0.67),
-        Offset(0.43, 0.61),
-        Offset(0.44, 0.56),
-        Offset(0.45, 0.51),
-        Offset(0.46, 0.46),
-        Offset(0.47, 0.40),
-        Offset(0.48, 0.34),
-        Offset(0.49, 0.28),
-        Offset(0.50, 0.23),
-        Offset(0.51, 0.19),
+        Offset(0.32, 0.71),
+        Offset(0.36, 0.71),
+        Offset(0.38, 0.69),
+        Offset(0.40, 0.65),
+        Offset(0.42, 0.59),
+        Offset(0.43, 0.53),
+        Offset(0.44, 0.48),
+        Offset(0.45, 0.43),
+        Offset(0.46, 0.38),
+        Offset(0.47, 0.32),
+        Offset(0.48, 0.26),
+        Offset(0.49, 0.20),
+        Offset(0.50, 0.15),
+        Offset(0.51, 0.11),
       ],
+
       [
-        Offset(0.51, 0.19),
-        Offset(0.52, 0.24),
-        Offset(0.53, 0.30),
-        Offset(0.54, 0.36),
-        Offset(0.55, 0.43),
-        Offset(0.56, 0.50),
-        Offset(0.57, 0.58),
-        Offset(0.58, 0.64),
-        Offset(0.59, 0.69),
-        Offset(0.60, 0.73),
-        Offset(0.61, 0.76),
-        Offset(0.62, 0.79),
-        Offset(0.64, 0.81),
-        Offset(0.66, 0.80),
+        Offset(0.51, 0.11),
+        Offset(0.52, 0.16),
+        Offset(0.53, 0.22),
+        Offset(0.54, 0.28),
+        Offset(0.55, 0.35),
+        Offset(0.56, 0.42),
+        Offset(0.57, 0.50),
+        Offset(0.58, 0.56),
+        Offset(0.59, 0.61),
+        Offset(0.60, 0.65),
+        Offset(0.61, 0.68),
+        Offset(0.62, 0.71),
+        Offset(0.64, 0.73),
+        Offset(0.66, 0.72),
       ],
+
       [
-        Offset(0.66, 0.80),
-        Offset(0.67, 0.76),
-        Offset(0.68, 0.72),
-        Offset(0.69, 0.68),
-        Offset(0.69, 0.65),
+        Offset(0.66, 0.72),
+        Offset(0.67, 0.68),
+        Offset(0.68, 0.64),
+        Offset(0.69, 0.60),
+        Offset(0.69, 0.57),
       ],
+
       [
-        Offset(0.44, 0.58),
-        Offset(0.47, 0.58),
-        Offset(0.50, 0.58),
-        Offset(0.53, 0.58),
-        Offset(0.57, 0.58),
+        Offset(0.44, 0.50),
+        Offset(0.47, 0.50),
+        Offset(0.50, 0.50),
+        Offset(0.53, 0.50),
+        Offset(0.57, 0.50),
       ],
+
       [
-        Offset(0.65, 0.82),
-        Offset(0.64, 0.86),
-        Offset(0.62, 0.91),
-        Offset(0.63, 0.96),
-        Offset(0.66, 0.96),
-        Offset(0.67, 0.94),
+        Offset(0.65, 0.74),
+        Offset(0.64, 0.78),
+        Offset(0.62, 0.83),
+        Offset(0.63, 0.88),
+        Offset(0.66, 0.88),
+        Offset(0.67, 0.86),
       ],
     ],
+
     arrows: [
       // lewa linia do góry
       TraceArrow(
@@ -226,6 +231,7 @@ const Map<String, LetterTrace> letterTraces = {
         toIndex: 4,
       ),
 
+      // ogonek
       TraceArrow(
         strokeIndex: 4,
         fromIndex: 0,
