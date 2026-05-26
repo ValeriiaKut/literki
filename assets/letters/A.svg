@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 480">
+  <!--
+    Coordinate system (shared across all letter SVGs):
+      cap-height top:    y =  40
+      x-height top:      y = 160
+      baseline:          y = 320
+      descender bottom:  y = 460
+    Strokes are listed in pedagogical drawing order.
+  -->
+  <g id="strokes" fill="none" stroke="#000" stroke-width="56" stroke-linecap="round" stroke-linejoin="round">
+    <path id="stroke-1" d="M 200 40 L 60 320"/>
+    <path id="stroke-2" d="M 200 40 L 340 320"/>
+    <path id="stroke-3" d="M 110 230 L 290 230"/>
+  </g>
+</svg>

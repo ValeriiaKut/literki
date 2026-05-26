@@ -11,6 +11,7 @@ import '../state/letter_sound.dart';
 import '../state/progress_store.dart';
 import '../theme.dart';
 import '../widgets/big_button.dart';
+import '../widgets/letter_svg.dart';
 import '../widgets/mascot.dart';
 import '../widgets/paper_background.dart';
 import 'painter.dart';
@@ -39,12 +40,16 @@ class _DrawScreenState extends State<DrawScreen>
   static const double _targetFontSize = 380;
   static const double _targetLetterSpacing = 2;
   static const double _scoringStrokeWidth = 25;
+  static const double _svgScoringStrokeWidth = 56;
+  static const double _svgGuideStrokeWidth = 56;
+  static const double _svgOutlineStrokeWidth = 4;
 
 
   List<Offset?> points = [];
   Size? _canvasSize;
   late final AnimationController _demo;
   bool _demoActive = false;
+  LetterDefinition? _letterSvg;
 
   int _attemptCount = 0;
   late DateTime _attemptStart;
@@ -68,6 +73,9 @@ class _DrawScreenState extends State<DrawScreen>
     if (widget.playIntro) {
       LetterSound.instance.playClip('zaczynamy.wav');
     }
+    LetterAssets.load(widget.letter).then((def) {
+      if (mounted) setState(() => _letterSvg = def);
+    });
   }
 
   @override
@@ -281,20 +289,31 @@ class _DrawScreenState extends State<DrawScreen>
   Future<ui.Image> _renderTarget(Size size) async {
     final recorder = ui.PictureRecorder();
     final canvas = Canvas(recorder);
-    final tp = TextPainter(
-      text: TextSpan(
-        text: widget.letter,
-        style:  TextStyle(
-          fontFamily: 'Handwriting',
-          fontSize:_getLetterSize(),
-          fontWeight: FontWeight.w800,
-          color: Colors.black,
-          letterSpacing: _targetLetterSpacing,
+    final svg = _letterSvg;
+    if (svg != null) {
+      paintLetterStrokes(
+        canvas,
+        size,
+        svg,
+        color: Colors.black,
+        strokeWidth: _svgScoringStrokeWidth,
+      );
+    } else {
+      final tp = TextPainter(
+        text: TextSpan(
+          text: widget.letter,
+          style: TextStyle(
+            fontFamily: 'Handwriting',
+            fontSize: _getLetterSize(),
+            fontWeight: FontWeight.w800,
+            color: Colors.black,
+            letterSpacing: _targetLetterSpacing,
+          ),
         ),
-      ),
-      textDirection: TextDirection.ltr,
-    )..layout();
-    tp.paint(canvas, _getLetterOffset(size, tp.width, tp.height));
+        textDirection: TextDirection.ltr,
+      )..layout();
+      tp.paint(canvas, _getLetterOffset(size, tp.width, tp.height));
+    }
     return recorder
         .endRecording()
         .toImage(size.width.toInt(), size.height.toInt());
@@ -516,6 +535,18 @@ class _DrawScreenState extends State<DrawScreen>
       );
     }
 
+
+    final svg = _letterSvg;
+    if (svg != null) {
+      return CustomPaint(
+        painter: _SvgLetterPainter(
+          definition: svg,
+          level: widget.level,
+          isDia: _isDia,
+        ),
+        size: Size.infinite,
+      );
+    }
 
     return CustomPaint(
       painter: _TargetLetterPainter(
@@ -829,4 +860,45 @@ class _TargetLetterPainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant _TargetLetterPainter oldDelegate) =>
       oldDelegate.letter != letter || oldDelegate.level != level;
+}
+
+class _SvgLetterPainter extends CustomPainter {
+  final LetterDefinition definition;
+  final int level;
+  final bool isDia;
+
+  _SvgLetterPainter({
+    required this.definition,
+    required this.level,
+    required this.isDia,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final Color color;
+    final double strokeWidth;
+    if (level == 1) {
+      color = isDia
+          ? AppColors.diacritic.withValues(alpha: 0.28)
+          : AppColors.guideInk;
+      strokeWidth = _DrawScreenState._svgGuideStrokeWidth;
+    } else {
+      color = (isDia ? AppColors.diacritic : AppColors.inkSoft)
+          .withValues(alpha: 0.55);
+      strokeWidth = _DrawScreenState._svgOutlineStrokeWidth;
+    }
+    paintLetterStrokes(
+      canvas,
+      size,
+      definition,
+      color: color,
+      strokeWidth: strokeWidth,
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant _SvgLetterPainter oldDelegate) =>
+      oldDelegate.definition != definition ||
+      oldDelegate.level != level ||
+      oldDelegate.isDia != isDia;
 }
