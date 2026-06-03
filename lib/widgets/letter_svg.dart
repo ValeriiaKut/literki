@@ -28,7 +28,7 @@ class LetterAssets {
   static Future<LetterDefinition?> load(String letter) async {
     if (_cache.containsKey(letter)) return _cache[letter];
     try {
-      final raw = await rootBundle.loadString('assets/letters/$letter.svg');
+      final raw = await rootBundle.loadString('assets/letters_svg/$letter.svg');
       final viewBoxMatch = RegExp(r'viewBox="([^"]+)"').firstMatch(raw);
       if (viewBoxMatch == null) {
         _cache[letter] = null;

@@ -16,6 +16,7 @@ import '../widgets/mascot.dart';
 import '../widgets/paper_background.dart';
 import 'painter.dart';
 import 'success_dialog.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class DrawScreen extends StatefulWidget {
   final String letter;
@@ -536,15 +537,19 @@ class _DrawScreenState extends State<DrawScreen>
     }
 
 
-    final svg = _letterSvg;
-    if (svg != null) {
-      return CustomPaint(
-        painter: _SvgLetterPainter(
-          definition: svg,
-          level: widget.level,
-          isDia: _isDia,
+    if (widget.level == 2) {
+      return Positioned.fill(
+        child: Transform.translate(
+          offset: const Offset(0, -80), // підняти на 80 px
+          child: Transform.scale(
+            scale: 1.0,
+            child: SvgPicture.asset(
+              'assets/letters_svg/${widget.letter}.svg',
+              fit: BoxFit.contain,
+              alignment: Alignment.center,
+            ),
+          ),
         ),
-        size: Size.infinite,
       );
     }
 
