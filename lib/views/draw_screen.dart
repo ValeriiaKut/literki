@@ -538,15 +538,24 @@ class _DrawScreenState extends State<DrawScreen>
 
 
     if (widget.level == 2) {
+      final svgName = widget.letter == widget.letter.toUpperCase()
+          ? 'upper_${widget.letter}.svg'
+          : 'lower_${widget.letter}.svg';
+
+      double svgOffsetY = -80;
+
+      if (widget.letter == 'Ą') {
+        svgOffsetY = -30;
+      }
+
       return Positioned.fill(
         child: Transform.translate(
-          offset: const Offset(0, -80), // підняти на 80 px
+          offset: Offset(0, svgOffsetY),
           child: Transform.scale(
             scale: 1.0,
             child: SvgPicture.asset(
-              'assets/letters_svg/${widget.letter}.svg',
+              'assets/letters_svg/$svgName',
               fit: BoxFit.contain,
-              alignment: Alignment.center,
             ),
           ),
         ),
