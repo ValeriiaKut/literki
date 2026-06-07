@@ -538,14 +538,69 @@ class _DrawScreenState extends State<DrawScreen>
 
 
     if (widget.level == 2) {
-      final svgName = widget.letter == widget.letter.toUpperCase()
+      final isNumber = RegExp(r'^[0-9]$').hasMatch(widget.letter);
+
+      final svgName = isNumber
+          ? 'number_${widget.letter}.svg'
+          : widget.letter == widget.letter.toUpperCase()
           ? 'upper_${widget.letter}.svg'
           : 'lower_${widget.letter}.svg';
 
       double svgOffsetY = -80;
 
-      if (widget.letter == 'Ą') {
+      if (widget.letter == 'Ą' || widget.letter == 'Ę') {
         svgOffsetY = -30;
+      }
+
+      if (
+          widget.letter == 'm' ||
+          widget.letter == 'c' ||
+          widget.letter == 'e' ||
+          widget.letter == 'n' ||
+          widget.letter == 'o' ||
+          widget.letter == 'r' ||
+          widget.letter == 's' ||
+          widget.letter == 'u' ||
+          widget.letter == 'w' ||
+          widget.letter == 'z') {
+        svgOffsetY = -80;
+      }
+      if (widget.letter == 'a' ){
+        svgOffsetY = -110;
+      }
+
+      if (widget.letter == 'ę' ||
+          widget.letter == 'ą' ||
+          widget.letter == 'j') {
+        svgOffsetY = -110;
+      }
+
+
+
+      if (widget.letter == 'f' ||
+          widget.letter == 'G' ||
+          widget.letter == 'J' ||
+          widget.letter == 'Y') {
+        svgOffsetY = -60;
+      }
+
+      if (
+          widget.letter == 'ń' ||
+          widget.letter == 'ó' ||
+          widget.letter == 'ś' ||
+          widget.letter == 't' ||
+          widget.letter == 'ź' ||
+          widget.letter == 'ż') {
+        svgOffsetY = -40;
+      }
+
+      if (widget.letter == 'Ć' ||
+          widget.letter == 'Ń' ||
+          widget.letter == 'Ó' ||
+          widget.letter == 'Ś' ||
+          widget.letter == 'Ź' ||
+          widget.letter == 'Ż') {
+        svgOffsetY = 60;
       }
 
       return Positioned.fill(
