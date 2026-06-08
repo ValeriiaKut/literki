@@ -600,7 +600,11 @@ class _DrawScreenState extends State<DrawScreen>
           widget.letter == 'Ś' ||
           widget.letter == 'Ź' ||
           widget.letter == 'Ż') {
-        svgOffsetY = 60;
+        // These accented uppercase SVGs carry their accent (acute / overdot)
+        // fully inside the viewBox above a body that matches the base glyph,
+        // so the whole letter is already centred by BoxFit.contain and needs
+        // no manual nudge.
+        svgOffsetY = 0;
       }
 
       return Positioned.fill(
