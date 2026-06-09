@@ -49,7 +49,6 @@ flutter:
     - assets/fonts/
     - assets/letters_svg/
     - assets/literki_dzwieki/
-    - assets/letters_svg/
 
   fonts:
     - family: Handwriting
