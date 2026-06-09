@@ -35,14 +35,17 @@ Target audience implications you should keep front of mind:
 - Drawings render with `CustomPainter`; scoring renders off-screen via
   `PictureRecorder` + `TextPainter` and compares raw RGBA bytes.
 - Mascot, stars, paper background, and the splash sparkle are all
-  drawn programmatically with `CustomPainter` — there are no SVGs
-  or rasters for these (only the launcher icon and native splash use
-  PNGs).
+  drawn programmatically with `CustomPainter`. The only vector assets are
+  the **level-2 tracing guides** under `assets/letters_svg/`, rendered with
+  `flutter_svg` (the launcher icon and native splash remain PNGs).
 
 Key dependencies (`pubspec.yaml`):
 - `path_provider` — runtime, used by `DataLogger` for the CSV path.
 - `audioplayers` — runtime, used by `LetterSound` to play per-letter
   Polish pronunciations from `assets/literki_dzwieki/`.
+- `flutter_svg` — runtime, renders the per-glyph level-2 tracing guides
+  in `assets/letters_svg/` via `SvgPicture.asset` (see the SVG tracing
+  guides note below).
 - `flutter_launcher_icons`, `flutter_native_splash` — dev-time codegen.
 
 ## Build, run, test
@@ -83,6 +86,7 @@ lib/
     data_logger.dart           # CSV append/read/clear at app docs dir
   widgets/
     big_button.dart            # 3D press-down button, sm/md/lg
+    letter_svg.dart            # Hand-rolled SVG path parser + LetterAssets loader (inert scoring path — see below)
     mascot.dart                # MascotMood enum + custom-painted mascot
     paper_background.dart      # Lined / dotted paper textures
     star.dart                  # StarIcon, StarRow
@@ -160,6 +164,27 @@ contract.
   feedback clips fire from `_check` via `_feedbackClipFor(score)` —
   keep that mapping in sync if you add a new score band or clip.
 
+### SVG tracing guides (level 2)
+Level 2 (`Średni`) draws a hand-authored vector guide per glyph instead of
+the handwriting font. The files live in `assets/letters_svg/` and bundle a
+faint reference glyph, green start dots, and green directional arrows that
+teach stroke order — `flutter_svg`'s `SvgPicture.asset` renders them as-is.
+
+- Naming is positional: `upper_A.svg`, `lower_a.svg`, `number_0.svg`.
+  Lowercase diacritics keep their precomposed **NFC** char in the filename
+  (`lower_ą.svg`). `DrawScreen` builds the name from `widget.letter` +
+  case + the `^[0-9]$` digit check; keep that mapping intact if you add
+  glyphs.
+- Vertical placement is corrected per-letter via the `svgOffsetY` ladder in
+  `draw_screen.dart` (`Transform.translate`). Most glyphs sit at `-80`;
+  ascenders/descenders and accented capitals have their own values. If a new
+  guide sits too high/low, add it to that ladder rather than re-exporting the
+  SVG.
+- Both `assets/letters_svg/` and `flutter_svg` are already declared in
+  `pubspec.yaml` (the asset is listed twice — harmless, but don't add a
+  third). After adding files, re-run `flutter pub get` if the bundle
+  doesn't pick them up.
+
 ### Layout gating
 `c.maxWidth >= 700` is the agreed phone/tablet breakpoint. If you add a
 new screen, mirror the wide/compact pattern from `level_select_screen`
@@ -199,6 +224,17 @@ that idiom rather than reaching for `flutter_animate` or similar.
 - **`_scoringStrokeWidth = 25`.** The pixel-overlap scorer thickens the
   drawing for matching only. The on-canvas stroke (12 px) is unchanged.
   Tune the scorer there, not in `DrawingPainter`.
+- **`letter_svg.dart` is wired but inert.** `LetterAssets` /
+  `SvgPathParser` / `paintLetterStrokes` / `_SvgLetterPainter` form a
+  prototype that would let scoring (`_renderTarget`) compare against the SVG
+  strokes. It never fires: `LetterAssets.load(widget.letter)` looks up bare
+  `A.svg` / `a.svg` names that don't exist (the real files are
+  `upper_`/`lower_`/`number_` prefixed), so `_letterSvg` stays `null` and the
+  scorer always falls back to the **handwriting font** glyph — even on level 2
+  where the child is tracing an SVG. The on-screen level-2 guide comes from
+  `flutter_svg`, a completely separate path. If you want SVG-based scoring,
+  fix the filename resolution in `LetterAssets.load` first; don't assume the
+  parser is live today.
 - **`pubspec.yaml` `name:` is `untitled`.** This leaks into
   `import 'package:untitled/...'` (see `test/widget_test.dart`). Renaming
   the package is a sweeping change — don't do it as a side quest.

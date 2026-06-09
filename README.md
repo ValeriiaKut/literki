@@ -63,15 +63,18 @@ The app has six screens:
    between three difficulties, each with an emoji avatar:
    - **Łatwy 🐣 (Easy, P1)** — the full grey letter/digit shows under the
      canvas; trace along it.
-   - **Średni 🐰 (Medium, P2)** — only the outline is shown; trace inside
-     the lines.
+   - **Średni 🐰 (Medium, P2)** — a vector **tracing guide** is shown: a
+     faint reference glyph overlaid with green start dots and directional
+     arrows that teach the correct stroke order and direction (see
+     [SVG tracing guides](#svg-tracing-guides)).
    - **Trudny 🦁 (Hard, P3)** — just a small dot in the center; write from
      memory.
    On tablets (≥ 700 px wide) the big letter preview sits beside the level
    list; on phones it stacks vertically. Each level card shows the stars
    already earned at that specific level.
 4. **Pisanie (Drawing)** — the heart of the app. Lined paper background,
-   level-aware guide, side mascot that switches from idle to cheering as
+   level-aware guide (full glyph on level 1, an SVG stroke-order guide with
+   arrows on level 2, a dot on level 3), side mascot that switches from idle to cheering as
    soon as the child starts drawing, "Pokaż" demo that sweeps a glowing
    sparkle across the letter to reveal it, "Wyczyść" to clear, "Sprawdź"
    to score, and prev/next arrows that cycle within the active module
@@ -125,6 +128,40 @@ not `A` + combining ogonek. macOS sometimes returns NFD when listing
 filenames; if you add new recordings on a Mac, double-check with
 `ls literki_dzwieki | xxd` (the diacritic should be a single 2-byte UTF-8
 sequence) before committing, otherwise the asset bundle won't resolve them.
+
+## SVG tracing guides
+
+Level 2 (**Średni**) no longer traces the handwriting font outline — it shows
+a hand-authored **vector tracing guide** per letter and digit, stored under
+`assets/letters_svg/` and rendered with
+[`flutter_svg`](https://pub.dev/packages/flutter_svg). Each SVG bundles three
+layers in one file:
+
+- a **faint reference glyph** (the letter shape at low opacity) so the child
+  can see where to write,
+- green **start dots** marking where each stroke begins, and
+- green **directional arrows** that teach the correct stroke order and
+  direction.
+
+Files are named by case and kind: `upper_A.svg`, `lower_a.svg`,
+`number_0.svg` (lowercase diacritics like `lower_ą.svg` keep their precomposed
+NFC character in the filename). `DrawScreen` picks the right file from
+`widget.letter` and `widget.level == 2`, then renders it with
+`SvgPicture.asset(..., fit: BoxFit.contain)`.
+
+The font's line box doesn't centre every glyph the same way, so a handful of
+letters get a per-letter vertical nudge (`svgOffsetY` in
+`draw_screen.dart`) — most sit at `-80`, while ascenders/descenders and
+accented capitals have their own values. If you add or re-export a guide and
+it sits too high or low, adjust its entry there rather than editing the SVG.
+
+> **Note:** scoring still compares the drawing against the **handwriting
+> font** glyph, not the SVG. `lib/widgets/letter_svg.dart` (a hand-rolled
+> `SvgPathParser` + `LetterAssets` loader) is wired into `_renderTarget` and
+> `_SvgLetterPainter` but currently inert — `LetterAssets.load` looks for
+> bare `A.svg` / `a.svg` names that don't match the `upper_`/`lower_`/`number_`
+> files, so it always falls back to the font path. The visible level-2 guide
+> comes entirely from `flutter_svg`. See `AGENTS.md` before relying on it.
 
 ## Progress and logging
 
@@ -241,6 +278,7 @@ lib/
     data_logger.dart               # CSV attempt log in app documents dir
   widgets/
     big_button.dart                # 3D pressed-down button (sm/md/lg)
+    letter_svg.dart                # SVG path parser + LetterAssets loader (prototype scoring path)
     mascot.dart                    # "Lulu" mascot with mood + bob/blink/wave
     paper_background.dart          # Lined / dotted paper textures
     star.dart                      # StarIcon + StarRow
@@ -254,6 +292,7 @@ lib/
     painter.dart                   # CustomPainter for live user strokes
 assets/
   fonts/                           # PlaywritePL handwriting font
+  letters_svg/                     # Per-glyph level-2 tracing guides (upper_A.svg, lower_a.svg, number_0.svg)
   literki_dzwieki/                 # Per-letter Polish pronunciation WAVs (A.wav, Ą.wav, …)
   literki-icon-1024.png            # Source for flutter_launcher_icons
   literki-splash-1080x1920.png     # Source for flutter_native_splash
