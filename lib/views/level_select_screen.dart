@@ -143,8 +143,28 @@ class _BigLetterCard extends StatelessWidget {
     this.size,
   });
 
+  /// Per-letter tweaks for the big preview glyph: a scale multiplier and a
+  /// vertical nudge expressed as a fraction of the card size
+  /// (positive = down). The handwriting font places some diacritics
+  /// inconsistently, so a few letters need nudging to sit nicely in the card.
+  ({double scale, double dy}) get _adjust {
+    return switch (letter) {
+      'Ą' || 'Ę' => (scale: 0.90, dy: 0.0),
+      'ą' => (scale: 1.0, dy: -0.06),
+      'ę' => (scale: 1.0, dy: -0.06),
+      // These accented capitals render high in the font's line box (the
+      // accent even overflows the top), so they need a sizeable downward
+      // nudge plus a slight shrink to stay clear of the card edges.
+      'Ć' || 'Ń' || 'Ó' || 'Ś' || 'Ź' => (scale: 0.95, dy: 0.10),
+      'Ż' => (scale: 0.95, dy: 0.09),
+      _ => (scale: 1.0, dy: 0.0),
+    };
+  }
+
   @override
   Widget build(BuildContext context) {
+    final adj = _adjust;
+    final dim = size ?? 160;
     final card = Container(
       width: size,
       height: size,
@@ -154,16 +174,22 @@ class _BigLetterCard extends StatelessWidget {
         boxShadow: cardShadow,
       ),
       child: Center(
-        child: FittedBox(
-          fit: BoxFit.scaleDown,
-          child: Text(
-            letter,
-            style: TextStyle(
-              fontFamily: 'Handwriting',
-              fontSize: 200,
-              fontWeight: FontWeight.w800,
-              height: 1,
-              color: isDia ? AppColors.diacritic : AppColors.ink,
+        child: Transform.translate(
+          offset: Offset(0, adj.dy * dim),
+          child: Transform.scale(
+            scale: adj.scale,
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                letter,
+                style: TextStyle(
+                  fontFamily: 'Handwriting',
+                  fontSize: 200,
+                  fontWeight: FontWeight.w800,
+                  height: 1,
+                  color: isDia ? AppColors.diacritic : AppColors.ink,
+                ),
+              ),
             ),
           ),
         ),

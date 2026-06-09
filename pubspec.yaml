@@ -11,7 +11,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
+  flutter_svg: ^2.0.10
 
   cupertino_icons: ^1.0.8
   path_provider: ^2.1.4
@@ -47,7 +47,9 @@ flutter:
 
   assets:
     - assets/fonts/
+    - assets/letters_svg/
     - assets/literki_dzwieki/
+    - assets/letters_svg/
 
   fonts:
     - family: Handwriting
