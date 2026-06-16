@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../data/alphabet.dart';
 import '../data/module.dart';
+import '../data/training.dart';
 import '../state/letter_sound.dart';
 import '../state/progress_store.dart';
 import '../theme.dart';
@@ -9,6 +10,7 @@ import '../widgets/paper_background.dart';
 import '../widgets/star.dart';
 import 'level_select_screen.dart';
 import 'report_screen.dart';
+import 'training_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -148,7 +150,11 @@ class _ModuleSwitch extends StatelessWidget {
           for (final m in Module.values)
             _ModuleChip(
               label: m.titleLabel,
-              icon: m == Module.letters ? Icons.abc : Icons.pin,
+              icon: switch (m) {
+                Module.letters => Icons.abc,
+                Module.numbers => Icons.pin,
+                Module.training => Icons.gesture,
+              },
               active: selected == m,
               onTap: () => onSelect(m),
             ),
@@ -260,6 +266,8 @@ class _Grid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (module == Module.training) return const _TrainingGrid();
+
     final items = module.items;
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -285,6 +293,93 @@ class _Grid extends StatelessWidget {
           },
         );
       },
+    );
+  }
+}
+
+class _TrainingGrid extends StatelessWidget {
+  const _TrainingGrid();
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final cols = (constraints.maxWidth / 200).floor().clamp(2, 5);
+        return GridView.builder(
+          key: const ValueKey(Module.training),
+          padding: EdgeInsets.zero,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: cols,
+            crossAxisSpacing: 12,
+            mainAxisSpacing: 12,
+            childAspectRatio: 1.3,
+          ),
+          itemCount: trainingPatterns.length,
+          itemBuilder: (context, idx) => _TrainingTile(
+            pattern: trainingPatterns[idx],
+            delay: Duration(milliseconds: idx * 30),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _TrainingTile extends StatelessWidget {
+  final TrainingPattern pattern;
+  final Duration delay;
+  const _TrainingTile({required this.pattern, required this.delay});
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: AppColors.cardBg,
+      borderRadius: BorderRadius.circular(18),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(18),
+        onTap: () {
+          LetterSound.instance.playClip('zaczynamy.wav');
+          Navigator.of(context).push(MaterialPageRoute(
+            builder: (_) => TrainingScreen(pattern: pattern),
+          ));
+        },
+        child: Ink(
+          decoration: BoxDecoration(
+            color: AppColors.cardBg,
+            borderRadius: BorderRadius.circular(18),
+            boxShadow: cardShadow,
+          ),
+          child: Column(
+            children: [
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 14, 16, 4),
+                  child: CustomPaint(
+                    size: Size.infinite,
+                    painter: TrainingGuidePainter(
+                      pattern,
+                      rows: 1,
+                      strokeWidth: 4,
+                      color: AppColors.accent,
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: Text(
+                  pattern.label,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.ink,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
