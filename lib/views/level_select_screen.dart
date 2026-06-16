@@ -183,7 +183,7 @@ class _BigLetterCard extends StatelessWidget {
               child: Text(
                 letter,
                 style: TextStyle(
-                  fontFamily: 'Handwriting',
+                  fontFamily: 'Elementarz',
                   fontSize: 200,
                   fontWeight: FontWeight.w800,
                   height: 1,

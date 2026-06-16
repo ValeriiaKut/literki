@@ -374,7 +374,7 @@ class _LetterTileState extends State<_LetterTile>
                     child: Text(
                       widget.letter,
                       style: TextStyle(
-                        fontFamily: 'Handwriting',
+                        fontFamily: 'Elementarz',
                         fontWeight: FontWeight.w800,
                         fontSize: 36,
                         height: 1,

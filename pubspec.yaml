@@ -54,4 +54,7 @@ flutter:
     - family: Handwriting
       fonts:
         - asset: assets/fonts/PlaywritePL-VariableFont_wght.ttf
+    - family: Elementarz
+      fonts:
+        - asset: assets/fonts/Elementarz2.ttf
 

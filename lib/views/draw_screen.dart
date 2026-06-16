@@ -58,6 +58,11 @@ class _DrawScreenState extends State<DrawScreen>
   bool get _isDia =>
       widget.module == Module.letters && polishDiacritics.contains(widget.letter);
 
+  // The letter glyphs use the school-primer font. Level 2's tracing guide is
+  // rendered from SVG instead (see _guideForLevel), so the font only affects
+  // levels 1 and 3 there.
+  String get _letterFont => 'Elementarz';
+
   List<String> get _items => widget.module.items;
   int get _idx => _items.indexOf(widget.letter);
   bool get _hasNext => _idx >= 0 && _idx < _items.length - 1;
@@ -304,7 +309,7 @@ class _DrawScreenState extends State<DrawScreen>
         text: TextSpan(
           text: widget.letter,
           style: TextStyle(
-            fontFamily: 'Handwriting',
+            fontFamily: _letterFont,
             fontSize: _getLetterSize(),
             fontWeight: FontWeight.w800,
             color: Colors.black,
@@ -409,7 +414,7 @@ class _DrawScreenState extends State<DrawScreen>
           Text(
             widget.letter,
             style: TextStyle(
-              fontFamily: 'Handwriting',
+              fontFamily: 'Elementarz',
               fontSize: wide ? 44 : 36,
               fontWeight: FontWeight.w800,
               height: 1,
@@ -647,7 +652,7 @@ class _DrawScreenState extends State<DrawScreen>
                   child: Text(
                     widget.letter,
                     style: TextStyle(
-                      fontFamily: 'Handwriting',
+                      fontFamily: _letterFont,
                       fontSize: _targetFontSize,
                       fontWeight: FontWeight.w800,
                       height: 1,
@@ -908,7 +913,7 @@ class _TargetLetterPainter extends CustomPainter {
       text: TextSpan(
         text: letter,
         style: TextStyle(
-          fontFamily: 'Handwriting',
+          fontFamily: 'Elementarz',
           fontSize: fontSize,
           fontWeight: FontWeight.w800,
           letterSpacing: 2,
