@@ -3,9 +3,9 @@ import 'numbers.dart';
 import 'training.dart';
 
 enum Module {
+  training,
   letters,
-  numbers,
-  training;
+  numbers;
 
   String get id => name;
 

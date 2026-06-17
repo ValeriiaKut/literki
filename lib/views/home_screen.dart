@@ -20,7 +20,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  Module _module = Module.letters;
+  Module _module = Module.training;
 
   void _setModule(Module m) {
     if (m == _module) return;
