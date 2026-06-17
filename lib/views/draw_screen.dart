@@ -450,25 +450,40 @@ class _DrawScreenState extends State<DrawScreen>
           const Spacer(),
           if (wide) ...[
             if (showLinesToggle) ...[
-              _PillButton(
-                icon: _showHelperLines
-                    ? Icons.format_align_justify_rounded
-                    : Icons.remove_rounded,
-                label: _showHelperLines ? 'Ukryj linie' : 'Pokaż linie',
-                onTap: _toggleHelperLines,
+              BigButton(
+                size: BigButtonSize.md,
+                color: AppColors.cardBg,
+                textColor: AppColors.ink,
+                onPressed: _toggleHelperLines,
+                icon: Icon(
+                  _showHelperLines
+                      ? Icons.format_align_justify_rounded
+                      : Icons.remove_rounded,
+                  color: AppColors.ink,
+                  size: 20,
+                ),
+                child: Text(_showHelperLines ? 'Ukryj linie' : 'Pokaż linie'),
               ),
               const SizedBox(width: 8),
             ],
-            _PillButton(
-              icon: Icons.visibility_rounded,
-              label: 'Pokaż',
-              onTap: _runDemo,
+            BigButton(
+              size: BigButtonSize.md,
+              color: AppColors.cardBg,
+              textColor: AppColors.ink,
+              onPressed: _runDemo,
+              icon: const Icon(Icons.visibility_rounded,
+                  color: AppColors.ink, size: 20),
+              child: const Text('Pokaż'),
             ),
             const SizedBox(width: 8),
-            _PillButton(
-              icon: Icons.cleaning_services_rounded,
-              label: 'Wyczyść',
-              onTap: _resetCanvas,
+            BigButton(
+              size: BigButtonSize.md,
+              color: AppColors.cardBg,
+              textColor: AppColors.ink,
+              onPressed: _resetCanvas,
+              icon: const Icon(Icons.cleaning_services_rounded,
+                  color: AppColors.ink, size: 20),
+              child: const Text('Wyczyść'),
             ),
           ] else ...[
             if (showLinesToggle) ...[
@@ -865,52 +880,6 @@ class _RevealClipper extends CustomClipper<Rect> {
   bool shouldReclip(covariant _RevealClipper old) => old.t != t;
 }
 
-class _PillButton extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final VoidCallback onTap;
-  const _PillButton({
-    required this.icon,
-    required this.label,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: AppColors.cardBg,
-      borderRadius: BorderRadius.circular(16),
-      elevation: 0,
-      child: InkWell(
-        borderRadius: BorderRadius.circular(16),
-        onTap: onTap,
-        child: Ink(
-          decoration: BoxDecoration(
-            color: AppColors.cardBg,
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: cardShadow,
-          ),
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(icon, color: AppColors.ink, size: 20),
-              const SizedBox(width: 8),
-              Text(
-                label,
-                style: const TextStyle(
-                  color: AppColors.ink,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 14,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
 
 class _RoundButton extends StatelessWidget {
   final IconData icon;
