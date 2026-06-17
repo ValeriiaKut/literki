@@ -55,6 +55,10 @@ class _DrawScreenState extends State<DrawScreen>
   int _attemptCount = 0;
   late DateTime _attemptStart;
 
+  // Level-2 letter guide: show the four-line handwriting ruling (ruled set) or
+  // the plain glyph without it. Defaults to showing the lines.
+  bool _showHelperLines = true;
+
   bool get _isDia =>
       widget.module == Module.letters && polishDiacritics.contains(widget.letter);
 
@@ -161,6 +165,10 @@ class _DrawScreenState extends State<DrawScreen>
   void _resetCanvas() {
     setState(() => points.clear());
     _attemptStart = DateTime.now();
+  }
+
+  void _toggleHelperLines() {
+    setState(() => _showHelperLines = !_showHelperLines);
   }
 
   void _goToLetter(int newIndex) {
@@ -390,6 +398,8 @@ class _DrawScreenState extends State<DrawScreen>
   }
 
   Widget _topBar(bool wide) {
+    final showLinesToggle =
+        widget.level == 2 && widget.module == Module.letters;
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
       child: Row(
@@ -439,6 +449,16 @@ class _DrawScreenState extends State<DrawScreen>
           ),
           const Spacer(),
           if (wide) ...[
+            if (showLinesToggle) ...[
+              _PillButton(
+                icon: _showHelperLines
+                    ? Icons.format_align_justify_rounded
+                    : Icons.remove_rounded,
+                label: _showHelperLines ? 'Ukryj linie' : 'Pokaż linie',
+                onTap: _toggleHelperLines,
+              ),
+              const SizedBox(width: 8),
+            ],
             _PillButton(
               icon: Icons.visibility_rounded,
               label: 'Pokaż',
@@ -451,6 +471,15 @@ class _DrawScreenState extends State<DrawScreen>
               onTap: _resetCanvas,
             ),
           ] else ...[
+            if (showLinesToggle) ...[
+              _RoundButton(
+                icon: _showHelperLines
+                    ? Icons.format_align_justify_rounded
+                    : Icons.remove_rounded,
+                onTap: _toggleHelperLines,
+              ),
+              const SizedBox(width: 8),
+            ],
             _RoundButton(
               icon: Icons.visibility_rounded,
               onTap: _runDemo,
@@ -543,6 +572,25 @@ class _DrawScreenState extends State<DrawScreen>
 
 
     if (widget.level == 2) {
+      // Letters use the baked Elementarz-2 writing-guide SVGs (stroke arrows,
+      // start dot, red vowels / black consonants). The ruled set carries the
+      // four-line handwriting liniatura; the plain set omits it. Each glyph is
+      // laid out within its own viewBox, so BoxFit.contain centres it without
+      // the per-letter nudging the old guide needed.
+      if (widget.module == Module.letters) {
+        final variant = _showHelperLines ? 'ruled' : 'plain';
+        return Positioned.fill(
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: SvgPicture.asset(
+              'assets/letters_svg/$variant/'
+              '${letterGuideSvgName(widget.letter)}.svg',
+              fit: BoxFit.contain,
+            ),
+          ),
+        );
+      }
+
       final isNumber = RegExp(r'^[0-9]$').hasMatch(widget.letter);
 
       final svgName = isNumber

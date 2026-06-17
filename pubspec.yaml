@@ -48,6 +48,8 @@ flutter:
   assets:
     - assets/fonts/
     - assets/letters_svg/
+    - assets/letters_svg/plain/
+    - assets/letters_svg/ruled/
     - assets/literki_dzwieki/
 
   fonts:
