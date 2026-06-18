@@ -16,6 +16,8 @@ dependencies:
   cupertino_icons: ^1.0.8
   path_provider: ^2.1.4
   audioplayers: ^6.1.0
+  flutter_tts: ^4.2.0
+  speech_to_text: ^7.0.0
 
 dev_dependencies:
   flutter_test:
@@ -51,6 +53,7 @@ flutter:
     - assets/letters_svg/plain/
     - assets/letters_svg/ruled/
     - assets/literki_dzwieki/
+    - assets/reading_svg/
 
   fonts:
     - family: Handwriting

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <path d="M30 100 Q100 50 170 100 Q100 150 30 100 Z" fill="#ffffff" stroke="#2b2f36" stroke-width="4"/>
+  <clipPath id="eye"><path d="M30 100 Q100 50 170 100 Q100 150 30 100 Z"/></clipPath>
+  <g clip-path="url(#eye)">
+    <circle cx="100" cy="100" r="30" fill="#5b8bb0"/>
+    <circle cx="100" cy="100" r="14" fill="#2b2f36"/>
+    <circle cx="91" cy="92" r="5" fill="#ffffff"/>
+  </g>
+  <g stroke="#2b2f36" stroke-width="3" stroke-linecap="round">
+    <line x1="40" y1="86" x2="32" y2="74"/>
+    <line x1="100" y1="63" x2="100" y2="49"/>
+    <line x1="160" y1="86" x2="168" y2="74"/>
+  </g>
+</svg>

@@ -19,6 +19,18 @@ class ProgressStore extends ChangeNotifier {
     return m.values.fold(0, (max, v) => v > max ? v : max);
   }
 
+  /// Sum of stars collected for one [module] at one [level], across all items.
+  /// Used by the reading module, where progress is a running count of mastered
+  /// syllables/words rather than a per-item 1–5 rating.
+  int starsForModuleLevel(Module module, int level) {
+    final prefix = '${module.id}:';
+    int t = 0;
+    _stars.forEach((key, levels) {
+      if (key.startsWith(prefix)) t += levels[level] ?? 0;
+    });
+    return t;
+  }
+
   int get totalStars {
     int t = 0;
     for (final levels in _stars.values) {

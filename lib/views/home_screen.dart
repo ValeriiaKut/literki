@@ -9,6 +9,7 @@ import '../theme.dart';
 import '../widgets/paper_background.dart';
 import '../widgets/star.dart';
 import 'level_select_screen.dart';
+import 'reading_menu.dart';
 import 'report_screen.dart';
 import 'training_screen.dart';
 
@@ -79,7 +80,9 @@ class _TopBar extends StatelessWidget {
         Expanded(
           child: Center(
             child: Text(
-              'Wybierz ${module.accusativeSingular}',
+              module == Module.reading
+                  ? 'Czytanie'
+                  : 'Wybierz ${module.accusativeSingular}',
               style: const TextStyle(
                 fontFamily: 'Handwriting',
                 fontWeight: FontWeight.w700,
@@ -137,7 +140,7 @@ class _ModuleSwitch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    final pill = Container(
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
         color: AppColors.cardBg,
@@ -154,11 +157,22 @@ class _ModuleSwitch extends StatelessWidget {
                 Module.letters => Icons.abc,
                 Module.numbers => Icons.pin,
                 Module.training => Icons.gesture,
+                Module.reading => Icons.auto_stories,
               },
               active: selected == m,
               onTap: () => onSelect(m),
             ),
         ],
+      ),
+    );
+    // Centre when the four chips fit; scroll horizontally on narrow phones.
+    return LayoutBuilder(
+      builder: (context, c) => SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: ConstrainedBox(
+          constraints: BoxConstraints(minWidth: c.maxWidth),
+          child: Center(child: pill),
+        ),
       ),
     );
   }
@@ -189,7 +203,7 @@ class _ModuleChip extends StatelessWidget {
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 160),
           curve: Curves.easeOut,
-          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
           decoration: BoxDecoration(
             color: color,
             borderRadius: BorderRadius.circular(14),
@@ -267,6 +281,7 @@ class _Grid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (module == Module.training) return const _TrainingGrid();
+    if (module == Module.reading) return const ReadingMenu();
 
     final items = module.items;
     return LayoutBuilder(

@@ -44,8 +44,14 @@ Key dependencies (`pubspec.yaml`):
 - `audioplayers` — runtime, used by `LetterSound` to play per-letter
   Polish pronunciations from `assets/literki_dzwieki/`.
 - `flutter_svg` — runtime, renders the per-glyph level-2 tracing guides
-  in `assets/letters_svg/` via `SvgPicture.asset` (see the SVG tracing
-  guides note below).
+  in `assets/letters_svg/` and the reading-module word pictures in
+  `assets/reading_svg/` via `SvgPicture.asset`.
+- `flutter_tts` — runtime, Polish text-to-speech (`pl-PL`) for the reading
+  module, wrapped by `SpeechService`.
+- `speech_to_text` — runtime, Polish speech recognition (`pl_PL`) for the
+  reading module's listen-and-repeat checks, wrapped by `SpeechService`.
+  Needs mic/speech permissions (iOS `Info.plist`, Android manifest) and
+  iOS 13+.
 - `flutter_launcher_icons`, `flutter_native_splash` — dev-time codegen.
 
 ## Build, run, test
@@ -78,10 +84,12 @@ lib/
   data/
     alphabet.dart              # polishAlphabet list, polishDiacritics set
     numbers.dart               # digits 0..9
-    module.dart                # Module enum (letters | numbers) + Polish labels
+    reading.dart               # readingSyllables (generated) + readingWords (12 ReadingWord)
+    module.dart                # Module enum (training | reading | letters | numbers) + Polish labels
   state/
     progress_store.dart        # Singleton in-memory stars, keyed by (module,item,level)
     letter_sound.dart          # Singleton AudioPlayer wrapper for letter pronunciations
+    speech_service.dart        # Singleton flutter_tts + speech_to_text wrapper (reading module)
   services/
     data_logger.dart           # CSV append/read/clear at app docs dir
   widgets/
@@ -90,6 +98,7 @@ lib/
     mascot.dart                # MascotMood enum + custom-painted mascot
     paper_background.dart      # Lined / dotted paper textures
     star.dart                  # StarIcon, StarRow
+    reading_widgets.dart       # Shared reading UI: ReadingTopBar, MicButton, ReadingCelebration
   views/
     welcome_screen.dart        # 1. Powitanie
     home_screen.dart           # 2. Module switch + grid (long-press stars → Raport)
@@ -98,6 +107,11 @@ lib/
     success_dialog.dart        # 5. Sukces overlay
     report_screen.dart         # 6. Raport pedagogiczny (parental, gated by long-press)
     painter.dart               # DrawingPainter for live user strokes
+    reading_menu.dart          # Reading module home (3 level cards), shown inside home_screen
+    reading_syllables_screen.dart  # Reading P1 — syllable grid (9 + Następne)
+    reading_words_screen.dart      # Reading P2 — 6 word pictures (2×3) + Następne
+    reading_match_screen.dart      # Reading P3 — read & point to one of 3 pictures
+    repeat_practice_dialog.dart    # Listen-and-repeat dialog used by reading P1 & P2
 test/
   widget_test.dart             # ⚠ stale Flutter counter template, not real coverage
 ```
@@ -184,6 +198,37 @@ teach stroke order — `flutter_svg`'s `SvgPicture.asset` renders them as-is.
   `pubspec.yaml` (the asset is listed twice — harmless, but don't add a
   third). After adding files, re-run `flutter pub get` if the bundle
   doesn't pick them up.
+
+### Reading module (Czytanie)
+A separate `Module.reading` whose home is `ReadingMenu` (three level cards),
+rendered inside `home_screen`'s grid the same way training gets
+`_TrainingGrid` — it does **not** use the per-item grid → level-select →
+draw flow. The `Module` inflected-noun getters return placeholder values for
+reading; `home_screen._TopBar` special-cases the title to `Czytanie` rather
+than emitting `Wybierz czytanie`.
+
+- **Speech goes through `SpeechService.instance`** (`speak`, `startListening`,
+  `matches`), never raw `FlutterTts`/`SpeechToText`. Like `LetterSound` it
+  swallows errors — TTS/recognition is a teaching aid, never a hard gate.
+- **Matching is intentionally lenient** (`SpeechService.matches`: strip
+  diacritics, substring + small edit-distance tolerance). Don't tighten it to
+  "fix" false positives — children's short utterances recognise poorly and a
+  false *negative* is the worse failure for a 5–7 year-old. Every flow keeps an
+  unlimited retry and an "Umiem!" escape hatch when recognition is unavailable.
+- **Stars are collectible, not 1–5 ratings.** Reading records `score: 1` per
+  syllable/word/match via `ProgressStore.record(..., module: Module.reading)`;
+  `record` only ever raises, so an item can't be farmed. Menu cards show a
+  running per-level total via `ProgressStore.starsForModuleLevel`.
+- **Word pictures** live in `assets/reading_svg/` with **ASCII** file names
+  (`samochod.svg`, `dlon.svg`, `olowek.svg`) deliberately — unlike the WAV
+  sounds, this sidesteps the NFC/NFD asset-resolution trap. The display label
+  and TTS text keep their diacritics (`ReadingWord.text`).
+- **Level-1 syllables are generated** in `reading.dart` (consonants × vowels,
+  open syllables only). If you extend the inventory, keep them phonotactically
+  real — digraphs and "j" don't take "…i".
+- **Permissions** are already declared (iOS `NSMicrophoneUsageDescription` +
+  `NSSpeechRecognitionUsageDescription`; Android `RECORD_AUDIO` + speech/TTS
+  `<queries>`). `speech_to_text` needs iOS 13+ — the project is at 13.0.
 
 ### Layout gating
 `c.maxWidth >= 700` is the agreed phone/tablet breakpoint. If you add a

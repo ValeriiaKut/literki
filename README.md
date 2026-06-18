@@ -53,7 +53,10 @@ The app has six screens:
    in on a staggered intro timeline.
 2. **Wybór modułu / Alfabet (Module + grid)** — the home screen's top bar
    greets with `Wybierz literę` or `Wybierz cyfrę` depending on the active
-   module, and a pill switch toggles between **Litery** and **Cyfry**. The
+   module, and a pill switch toggles between **Trening**, **Czytanie**,
+   **Litery**, and **Cyfry** (the switch scrolls horizontally on narrow
+   phones). Selecting **Czytanie** swaps the letter grid for the reading
+   menu (see [Reading module](#reading-module-czytanie)). The
    grid auto-sizes (4–16 columns) based on viewport width, so phones get
    tight tiles and tablets/iPad get larger ones. Each tile shows the item
    and a row of mini-stars representing the child's best score across all
@@ -94,6 +97,50 @@ The app has six screens:
    per-element breakdown sorted by average score (weakest first), each
    with attempt count, average time, and average stars. A "Wyczyść" button
    wipes the underlying CSV log after a confirmation dialog.
+
+## Reading module (Czytanie)
+
+Alongside writing, the **Czytanie** module teaches early reading in three
+levels, reached from the home pill switch. It uses the device's own speech
+engines: **text-to-speech** (`flutter_tts`, `pl-PL`) reads syllables and
+words aloud, and **speech recognition** (`speech_to_text`, `pl_PL`) checks
+that the child repeats them. Both live behind the `SpeechService` singleton
+(`lib/state/speech_service.dart`), the reading-side counterpart to
+`LetterSound`.
+
+- **Poziom 1 — Czytam sylaby.** A 3×3 grid of open syllables (sylaby
+  otwarte, e.g. `MA MO MU`) with a **Następne** button that pages through
+  the full set generated in `lib/data/reading.dart`. Tapping a syllable
+  opens a listen-and-repeat dialog: the child hears it, repeats into the
+  mic, and a star is collected on a good-enough match.
+- **Poziom 2 — Czytam wyrazy.** Six picture tiles (two rows of three), each
+  an SVG drawing with its word, paging through the 12 words. Tapping a tile
+  opens the same listen-and-repeat dialog, now with the picture shown.
+- **Poziom 3 — Przeczytaj i wskaż.** A word is shown and read aloud; the
+  child may repeat it (optional mic practice) and then taps the matching
+  picture among **three**. A correct pick celebrates and collects a star; a
+  wrong pick only nudges "spróbuj jeszcze raz" and lets them retry.
+
+The 12 words — `kot, pies, las, samochód, mama, tata, dłoń, nos, oko,
+ołówek, telefon, szklanka` — are simple flat **SVG** drawings under
+`assets/reading_svg/` (ASCII file names, e.g. `samochod.svg`, so asset
+resolution never hits the NFC/NFD pitfall the WAV files have).
+
+**Positive reinforcement, never a gate.** Recognition matching is
+deliberately lenient (diacritics stripped, substring and small-edit-distance
+tolerance) because recognizers mangle short utterances and children's
+speech. A miss is always met with encouragement and an unlimited retry, and
+if speech recognition is unavailable the child can still mark a prompt as
+read ("Umiem!") to collect the star. Stars feed the same `ProgressStore` /
+total-stars economy as writing, keyed by `Module.reading`; the menu cards
+show a running count of stars collected per level via
+`starsForModuleLevel`.
+
+**Permissions.** The mic flow needs `NSMicrophoneUsageDescription` +
+`NSSpeechRecognitionUsageDescription` (iOS `Info.plist`) and
+`RECORD_AUDIO` plus speech/TTS service `<queries>` (Android manifest) —
+all already declared. `speech_to_text` requires iOS 13+ (the project is
+already at 13.0).
 
 ## Letter sounds
 
