@@ -4,6 +4,10 @@
 <dict>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Mikrofon jest używany, aby dziecko mogło powtarzać sylaby i wyrazy podczas nauki czytania.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Rozpoznawanie mowy pomaga sprawdzić, czy dziecko poprawnie przeczytało sylabę lub wyraz.</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
