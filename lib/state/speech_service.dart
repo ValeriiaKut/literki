@@ -123,9 +123,9 @@ class SpeechService {
   }
 
   /// Whether the recognized speech [heard] is a good-enough match for [target]
-  /// (a syllable or word). Tolerant by design: exact match, substring either
-  /// way, or a small edit distance all count, since recognizers mangle short
-  /// utterances and children's speech.
+  /// (a syllable or word). Lenient but length-aware (see [_closeEnough]): short
+  /// prompts must be heard almost exactly so similar words don't bleed into one
+  /// another (`mama` vs `tata`), while longer words tolerate a slip or two.
   static bool matches(String target, String heard) {
     final t = _normalize(target);
     if (t.isEmpty) return false;
@@ -138,21 +138,39 @@ class SpeechService {
         .toList();
     if (tokens.isEmpty) return false;
 
-    final tol = t.length <= 3 ? 1 : 2;
-
     for (final tok in tokens) {
-      if (tok == t) return true;
-      if (tok.length >= t.length && tok.contains(t)) return true;
-      if (t.length >= tok.length && t.contains(tok) && tok.length >= 2) {
-        return true;
-      }
-      if (_levenshtein(tok, t) <= tol) return true;
+      if (_closeEnough(t, tok)) return true;
     }
+    // The recognizer sometimes splits one word into several tokens (or joins
+    // two) — also test the whole utterance glued together.
+    return _closeEnough(t, tokens.join());
+  }
 
-    final blob = tokens.join();
-    if (blob.contains(t)) return true;
-    if (_levenshtein(blob, t) <= tol) return true;
-    return false;
+  /// Whether a single recognized [cand]idate is a good-enough rendering of the
+  /// normalized [target].
+  ///
+  /// Tuned to avoid the classic confusion where two equally-short words differ
+  /// by a couple of letters (e.g. `mama` vs `tata`, edit distance 2): the
+  /// edit-distance budget scales with length, so short prompts must be heard
+  /// almost exactly while longer words tolerate a slip or two. A candidate that
+  /// *contains* the whole target still passes (the child said the word plus a
+  /// little extra, or the recognizer padded it).
+  static bool _closeEnough(String target, String cand) {
+    if (cand.isEmpty) return false;
+    if (cand == target) return true;
+    if (target.length >= 2 && cand.contains(target)) return true;
+
+    // Edit-distance budget: 0 for syllables / 3-letter words, 1 for 4–6, 2 for
+    // 7+. mama↔tata (len 4, distance 2) now fails; samochód tolerates a slip.
+    final allowed = target.length <= 3
+        ? 0
+        : target.length <= 6
+            ? 1
+            : 2;
+    if (allowed == 0) return false;
+    final dist = _levenshtein(target, cand);
+    final maxLen = target.length > cand.length ? target.length : cand.length;
+    return dist <= allowed && dist < maxLen;
   }
 
   static int _levenshtein(String a, String b) {
