@@ -4,9 +4,9 @@ import 'training.dart';
 
 enum Module {
   training,
-  reading,
   letters,
-  numbers;
+  numbers,
+  reading;
 
   String get id => name;
 

@@ -24,7 +24,7 @@ const _consonants = [
 
 /// Consonants that only take the "hard" vowels: "j" plus the digraphs (each a
 /// single Polish sound written with two letters).
-const _hardConsonants = ['j', 'ch', 'cz', 'dz', 'dż', 'rz', 'sz'];
+const _hardConsonants = ['j']; //['ch', 'cz', 'dz', 'dż', 'rz', 'sz'];
 
 /// Every level-1 syllable, lowercase. The grid renders them lowercase (ma, mo…)
 /// to match the early-reader primers.
