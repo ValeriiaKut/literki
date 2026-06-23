@@ -42,7 +42,7 @@ class _ReadingWordsScreenState extends State<ReadingWordsScreen> {
     showRepeatPractice(
       context,
       word: w.text,
-      display: w.upper,
+      display: w.text,
       svgAsset: w.assetPath,
       accent: AppColors.accent3,
       onStar: () => ProgressStore.instance
@@ -170,7 +170,7 @@ class _WordTile extends StatelessWidget {
                     FittedBox(
                       fit: BoxFit.scaleDown,
                       child: Text(
-                        word.upper,
+                        word.text,
                         style: const TextStyle(
                           fontFamily: 'Elementarz',
                           fontWeight: FontWeight.w800,

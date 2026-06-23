@@ -43,7 +43,7 @@ class _ReadingSyllablesScreenState extends State<ReadingSyllablesScreen> {
     showRepeatPractice(
       context,
       word: syllable,
-      display: syllable.toUpperCase(),
+      display: syllable,
       accent: AppColors.accent,
       onStar: () => ProgressStore.instance
           .record(syllable, 1, 1, module: Module.reading),
@@ -164,7 +164,7 @@ class _SyllableTile extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(10),
                   child: Text(
-                    syllable.toUpperCase(),
+                    syllable,
                     style: const TextStyle(
                       fontFamily: 'Elementarz',
                       fontWeight: FontWeight.w800,

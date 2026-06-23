@@ -168,7 +168,7 @@ class _ReadingMatchScreenState extends State<ReadingMatchScreen> {
                   child: FittedBox(
                     fit: BoxFit.scaleDown,
                     child: Text(
-                      _target.upper,
+                      _target.text,
                       style: TextStyle(
                         fontFamily: 'Elementarz',
                         fontWeight: FontWeight.w800,

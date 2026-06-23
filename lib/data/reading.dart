@@ -26,8 +26,8 @@ const _consonants = [
 /// single Polish sound written with two letters).
 const _hardConsonants = ['j', 'ch', 'cz', 'dz', 'dż', 'rz', 'sz'];
 
-/// Every level-1 syllable, lowercase. The grid renders them uppercase (MA, MO…)
-/// to match the concept design and early-reader primers.
+/// Every level-1 syllable, lowercase. The grid renders them lowercase (ma, mo…)
+/// to match the early-reader primers.
 final List<String> readingSyllables = [
   for (final c in _consonants)
     for (final v in _vowels) '$c$v',
